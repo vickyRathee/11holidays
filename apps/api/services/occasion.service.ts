@@ -1,12 +1,12 @@
-import { Context } from 'hono';
 import { Occasion } from '../schema/occasoinSchema';
 
 export const getOccasions = async (
-  ctx: Context,
+  env: CloudflareBindings,
   offset: number = 0,
   limit: number = 20
-): Promise<Array<Occasion>> => {
-  const sqlQuery = ctx.env.DB.prepare(
+) => {
+  const session = env.DB.withSession();
+  const sqlQuery = session.prepare(
     `
       SELECT * 
       FROM Occasions
@@ -18,24 +18,25 @@ export const getOccasions = async (
 };
 
 export const getOccasionById = async (
-  ctx: Context,
+  env: CloudflareBindings,
   occasionId: number
-): Promise<Occasion> => {
-  const sqlQuery = ctx.env.DB.prepare(
+): Promise<Occasion | null> => {
+  const session = env.DB.withSession();
+  const sqlQuery = session.prepare(
     `
       SELECT * 
       FROM Occasions
       WHERE occasion_id = ?`
   ).bind(occasionId);
 
-  return await sqlQuery.first();
+  return await sqlQuery.first<Occasion>();
 };
 
 export const createOccasion = async (
-  ctx: Context,
+  env: CloudflareBindings,
   data: Occasion
 ): Promise<number> => {
-  const response = await ctx.env.DB.prepare(
+  const response = await env.DB.prepare(
     `
       INSERT INTO Occasions (url, name, image, description) 
       VALUES (?, ?, ?, ?)`
@@ -43,15 +44,15 @@ export const createOccasion = async (
     .bind(data.url, data.name, data.image, data.description)
     .run();
 
-  return response.lastInsertRowid;
+  return response.meta.last_row_id;
 };
 
 export const updateOccasion = async (
-  ctx: Context,
+  env: CloudflareBindings,
   occasionId: number,
   data: Occasion
 ): Promise<boolean> => {
-  const response = await ctx.env.DB.prepare(
+  const response = await env.DB.prepare(
     `
       UPDATE Occasions 
       SET url = ?, name = ?, image = ?, description = ? 
@@ -60,14 +61,14 @@ export const updateOccasion = async (
     .bind(data.url, data.name, data.image, data.description, occasionId)
     .run();
 
-  return response.changes > 0;
+  return response.meta.changes > 0;
 };
 
 export const deleteOccasion = async (
-  ctx: Context,
+  env: CloudflareBindings,
   occasionId: number
 ): Promise<boolean> => {
-  const response = await ctx.env.DB.prepare(
+  const response = await env.DB.prepare(
     `
       DELETE FROM Occasions 
       WHERE occasion_id = ?`
@@ -75,5 +76,5 @@ export const deleteOccasion = async (
     .bind(occasionId)
     .run();
 
-  return response.changes > 0;
+  return response.meta.changes > 0;
 };

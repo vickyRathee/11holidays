@@ -12,13 +12,13 @@ const occasions = new Hono<{ Bindings: CloudflareBindings }>();
 
 occasions.get('/', async (c) => {
   const { offset = 0, limit = 1000 } = c.req.query();
-  const results = await getOccasions(c, Number(offset), Number(limit));
+  const results = await getOccasions(c.env, Number(offset), Number(limit));
   return c.json(results);
 });
 
 occasions.get('/:id', async (c) => {
   const id = c.req.param('id');
-  const data = await getOccasionById(c, Number(id));
+  const data = await getOccasionById(c.env, Number(id));
   if (!data) {
     throw new HTTPException(404, {
       message: `No occasion found`,
@@ -29,26 +29,26 @@ occasions.get('/:id', async (c) => {
 
 occasions.post('/', async (c) => {
   const occasionData = await c.req.json();
-  const newOccasionId = await createOccasion(c, occasionData);
+  const newOccasionId = await createOccasion(c.env, occasionData);
   return c.json({ id: newOccasionId }, 201);
 });
 
 occasions.put('/:id', async (c) => {
   const id = c.req.param('id');
   const occasionData = await c.req.json();
-  const success = await updateOccasion(c, Number(id), occasionData);
+  const success = await updateOccasion(c.env, Number(id), occasionData);
   if (!success) {
     throw new HTTPException(404, {
       message: `No occasion found`,
     });
   }
-  
+
   return c.json({ message: 'Occasion updated successfully' }, 200);
 });
 
 occasions.delete('/:id', async (c) => {
   const id = c.req.param('id');
-  const success = await deleteOccasion(c, Number(id));
+  const success = await deleteOccasion(c.env, Number(id));
   if (!success) {
     throw new HTTPException(404, {
       message: `No occasion found`,
