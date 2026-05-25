@@ -1,7 +1,9 @@
 import { Country } from '../schema/countrySchema';
 
 export const getCountries = async (env: CloudflareBindings): Promise<Array<Country>> => {
-  const sqlQuery = env.DB.prepare(
+  const session = env.DB.withSession();
+
+  const sqlQuery = session.prepare(
     `
       SELECT * 
       FROM Countries`
@@ -14,7 +16,9 @@ export const getCountryById = async (
   env: CloudflareBindings,
   country: string
 ): Promise<Country | null> => {
-  const sqlQuery = env.DB.prepare(
+  const session = env.DB.withSession();
+
+  const sqlQuery = session.prepare(
     `
       SELECT * 
       FROM Countries

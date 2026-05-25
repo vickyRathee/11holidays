@@ -12,7 +12,8 @@ export const getHolidaysByCountry = async (
   const start = format(startOfYear(baseDate), 'yyyy-MM-dd');
   const end = format(addYears(startOfYear(baseDate), 1), 'yyyy-MM-dd');
 
-  const sqlQuery = env.DB.prepare(
+  const session = env.DB.withSession();
+  const sqlQuery = session.prepare(
     `
         SELECT h.holiday_id, o.name, h.date, o.description, h.occasion_id, h.country, h.type, 
         h.created_at, h.updated_at
@@ -32,7 +33,8 @@ export const getHolidayById = async (
   env: CloudflareBindings,
   holidayId: number
 ): Promise<Holiday | null> => {
-  const sqlQuery = env.DB.prepare(
+  const session = env.DB.withSession();
+  const sqlQuery = session.prepare(
     `
         SELECT * 
         FROM Holidays
