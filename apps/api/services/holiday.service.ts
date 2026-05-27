@@ -113,24 +113,35 @@ export const importHolidays = async (
   await bulkInsertHolidays(env, holidays);
 };
 
-const bulkInsertHolidays = async (env: CloudflareBindings, holidays: Array<Holiday>) => {
+const bulkInsertHolidays = async (
+  env: CloudflareBindings,
+  holidays: Array<Holiday>
+) => {
   const multiQuery = `
-      WITH TempHolidays(date, occasion_id, type, country) AS (
-          VALUES ${holidays
-      .map(
-        (h) =>
-          `('${h.date}', ${h.occasion_id}, '${escapeSQL(
-            h.type
-          )}', '${escapeSQL(h.country)}')`
-      )
-      .join(', ')}
-      )
-      INSERT INTO Holidays (date, occasion_id, type, country)
-          SELECT DISTINCT t.date, t.occasion_id, t.type, t.country
-          FROM TempHolidays t
-          LEFT JOIN Holidays o 
-          ON t.date = o.date and t.country = o.country
-          WHERE o.date IS NULL;
+    INSERT INTO Holidays (
+      date,
+      year,
+      occasion_id,
+      type,
+      country
+    )
+    VALUES
+      ${holidays
+        .map(
+          (h) => `(
+            '${h.date}',
+            ${new Date(h.date).getUTCFullYear()},
+            ${h.occasion_id},
+            '${escapeSQL(h.type)}',
+            '${escapeSQL(h.country)}'
+          )`
+        )
+        .join(", ")}
+
+    ON CONFLICT(occasion_id, country, year)
+    DO UPDATE SET
+      date = excluded.date,
+      type = excluded.type;
   `;
 
   await env.DB.prepare(multiQuery).run();
@@ -141,31 +152,36 @@ const bulkInsertOccassions = async (
   holidays: Array<Holiday>
 ) => {
   const multiQuery = `
-      WITH TempOccasions(name, url, ref_url, description) AS (
-          VALUES ${holidays
+    INSERT INTO Occasions (name, url, ref_url, description)
+    VALUES
+      ${holidays
       .map(
-        (h) =>
-          `('${escapeSQL(h.name)}', '${h.url}', '${h.ref_url
-          }', '${escapeSQL(h.description!)}')`
+        (h) => `(
+            '${escapeSQL(h.name)}',
+            '${h.url}',
+            '${h.ref_url}',
+            '${escapeSQL(h.description || "")}'
+          )`
       )
-      .join(', ')}
-      )
-      INSERT INTO Occasions (name, url, ref_url, description)
-          SELECT DISTINCT t.name, t.url, t.ref_url, t.description
-          FROM TempOccasions t
-          LEFT JOIN Occasions o ON t.url = o.url
-          WHERE o.url IS NULL;
+      .join(", ")}
+
+    ON CONFLICT(url)
+    DO UPDATE SET
+      name = excluded.name,
+      ref_url = excluded.ref_url,
+      description = excluded.description;
   `;
 
   await env.DB.prepare(multiQuery).run();
 
   // Return ids
-  const { results } = await env.DB.prepare(
-    `
-      SELECT occasion_id, url FROM Occasions WHERE url IN (${holidays
-      .map((holiday) => `'${holiday.url}'`)
-      .join(', ')})
-  `
-  ).run();
+  const { results } = await env.DB.prepare(`
+    SELECT occasion_id, url
+    FROM Occasions
+    WHERE url IN (
+      ${holidays.map((h) => `'${h.url}'`).join(", ")}
+    )
+  `).run();
+
   return results as unknown as Array<Occasion>;
 };

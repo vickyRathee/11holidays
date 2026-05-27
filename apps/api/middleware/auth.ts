@@ -29,7 +29,7 @@ export const jwtAuth = (): MiddlewareHandler => {
 
         // ONLY admin can add, update, delete holidays
         if (ctx.req.method !== 'GET' && authUser.role !== 'admin') {
-            throw new HTTPException(403, { message: 'Permission denied' })
+            throw new HTTPException(403, { message: `Permission denied. Current role: ${authUser.role}` })
         }
 
         ctx.set("user", authUser);
