@@ -152,15 +152,14 @@ const bulkInsertOccassions = async (
   holidays: Array<Holiday>
 ) => {
   const multiQuery = `
-    INSERT INTO Occasions (name, url, ref_url, description)
+    INSERT INTO Occasions (name, url, ref_url)
     VALUES
       ${holidays
       .map(
         (h) => `(
             '${escapeSQL(h.name)}',
             '${h.url}',
-            '${h.ref_url}',
-            '${escapeSQL(h.description || "")}'
+            '${h.ref_url}'
           )`
       )
       .join(", ")}
@@ -168,8 +167,7 @@ const bulkInsertOccassions = async (
     ON CONFLICT(url)
     DO UPDATE SET
       name = excluded.name,
-      ref_url = excluded.ref_url,
-      description = excluded.description;
+      ref_url = excluded.ref_url;
   `;
 
   await env.DB.prepare(multiQuery).run();
