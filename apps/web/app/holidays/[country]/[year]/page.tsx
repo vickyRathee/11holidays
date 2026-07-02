@@ -3,48 +3,81 @@ import { fetchHolidays } from '@/lib/holidays-api';
 import { getCountryByCode } from '@/lib/countries-data';
 import { HolidayPageContent } from './holiday-page-content';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
+import { fetchOccasion } from '../../../../lib/occassion-api';
+import { OccasionPageContent } from './occasion-page-content';
 
 interface PageProps {
   params: Promise<{
     country: string;
-    year: string;
+    year: string; // year or slug
   }>;
 }
 
+function isYear(value: string): boolean {
+  return /^\d{4}$/.test(value);
+}
+
 export async function generateMetadata({ params }: PageProps) {
-  const { country: countryParam, year } = await params;
+  const { country: countryParam, year: value } = await params;
 
   const country = getCountryByCode(countryParam);
+
   if (!country) {
     return {
-      title: 'Country Not Found',
+      title: 'Not Found',
+    };
+  }
+
+  if (isYear(value)) {
+    return {
+      title: `${country.name} Holidays in ${value} - 11holidays`,
+      description: `Complete list of public holidays in ${country.name} for ${value}. View, download, and integrate ${country.code} holiday data via API.`,
     };
   }
 
   return {
-    title: `${country.name} Holidays in ${year} - 11holidays`,
-    description: `Complete list of public holidays in ${country.name} for ${year}. View, download, and integrate ${country.code} holiday data via API.`,
+    title: `${value} - 11holidays`,
+    description: `Learn about ${value}, its history, significance, and upcoming holiday dates.`,
   };
 }
 
 export default async function HolidayPage({ params }: PageProps) {
-  const { country: countryParam, year: yearParam } = await params;
+  const { country: countryParam, year: value } = await params;
 
   const country = getCountryByCode(countryParam);
-  const year = parseInt(yearParam);
 
-  if (!country || isNaN(year) || year < 2000 || year > 2100) {
+  if (!country) {
     notFound();
   }
 
   const { env } = getCloudflareContext();
-  const holidaysData = await fetchHolidays(env, country.code, year);
 
-  return (
-    <HolidayPageContent
-      country={country}
-      year={year}
-      holidaysData={holidaysData}
-    />
-  );
+  // /holidays/india/2026
+  if (isYear(value)) {
+    const year = Number(value);
+
+    if (year < 2000 || year > 2100) {
+      notFound();
+    }
+
+    const holidaysData = await fetchHolidays(env, country.code, year);
+
+    return (
+      <HolidayPageContent
+        country={country}
+        year={year}
+        holidaysData={holidaysData}
+      />
+    );
+  }
+
+  // /holidays/india/diwali
+  const slug = `${country.code.toLowerCase()}/${value}`;
+  const occasion = await fetchOccasion(env, slug);
+
+  if (!occasion) {
+    notFound();
+  }
+
+  return <OccasionPageContent country={country} occasion={occasion} />;
 }

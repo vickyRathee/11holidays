@@ -7,6 +7,14 @@ const nextConfig: NextConfig = {
       static: 3600,
     },
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+    ],
+  },
 };
 
 export default nextConfig;
