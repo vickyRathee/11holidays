@@ -1,15 +1,15 @@
 import { notFound } from 'next/navigation';
-import { fetchHolidays } from '@/lib/holidays-api';
+import { fetchHolidays, fetchHolidaysByOcasionId } from '@/lib/holidays-api';
 import { getCountryByCode } from '@/lib/countries-data';
 import { HolidayPageContent } from './holiday-page-content';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
-import { fetchOccasion } from '../../../../lib/occassion-api';
+import { fetchOccasion } from '@/lib/occassion-api';
 import { OccasionPageContent } from './occasion-page-content';
 
 interface PageProps {
   params: Promise<{
     country: string;
-    year: string; // year or slug
+    slug: string; // year or slug
   }>;
 }
 
@@ -18,7 +18,7 @@ function isYear(value: string): boolean {
 }
 
 export async function generateMetadata({ params }: PageProps) {
-  const { country: countryParam, year: value } = await params;
+  const { country: countryParam, slug: value } = await params;
 
   const country = getCountryByCode(countryParam);
 
@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: PageProps) {
 }
 
 export default async function HolidayPage({ params }: PageProps) {
-  const { country: countryParam, year: value } = await params;
+  const { country: countryParam, slug: value } = await params;
 
   const country = getCountryByCode(countryParam);
 
@@ -79,5 +79,7 @@ export default async function HolidayPage({ params }: PageProps) {
     notFound();
   }
 
-  return <OccasionPageContent country={country} occasion={occasion} />;
+  const holidays = await fetchHolidaysByOcasionId(env, occasion.occasion_id);
+
+  return <OccasionPageContent country={country} occasion={occasion} holidays={holidays} />;
 }

@@ -35,7 +35,7 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
 
       <nav
         aria-label="Breadcrumb"
-        className="flex items-center gap-2 text-sm text-muted-foreground"
+        className="flex items-center gap-2 text-xs text-muted-foreground"
       >
         {items.map((item, index) => (
           <div key={index} className="flex items-center gap-2">

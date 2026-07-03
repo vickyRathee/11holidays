@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import ApiKeySignup from '@/components/signup';
 import { Suspense } from 'react';
+import { PageLayout } from '../../components/page-layout';
 
 export const metadata = {
   title: 'Get API Key for Holidays API - 11holidays.com',
@@ -10,7 +11,7 @@ export const metadata = {
 
 export default function ApiKeyPage() {
   return (
-    <div className="mx-auto space-y-8">
+    <PageLayout sidebar={false}>
       <div className="space-y-2 text-center">
         <h1 className="text-4xl font-bold tracking-tight md:text-4xl">
           Get Your Holidays API Key
@@ -57,6 +58,6 @@ export default function ApiKeyPage() {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </PageLayout>
   );
 }
