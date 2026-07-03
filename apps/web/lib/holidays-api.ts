@@ -43,7 +43,7 @@ export async function fetchHolidays(
     `
         SELECT h.holiday_id, o.name, h.date, h.occasion_id, h.country, h.type, 
         CASE
-          WHEN h.description IS NOT NULL THEN h.url
+          WHEN o.description IS NOT NULL THEN o.url
           ELSE NULL
         END AS url,
         h.created_at, h.updated_at
