@@ -91,6 +91,14 @@ export const deleteHoliday = async (
   return success;
 };
 
+function cleanName(name: string): string {
+    return name
+        .replace(/\s*\(Tentative Date\)$/i, '')
+        .replace(/\s*\(Observed\)$/i, '')
+        .replace(/\s+observed$/i, '')
+        .trim();
+}
+
 export const importHolidays = async (
   env: CloudflareBindings,
   holidays: Array<Holiday>
@@ -100,6 +108,7 @@ export const importHolidays = async (
   for (const holiday of holidays) {
     const slug = holiday.ref_url?.split('/').pop()?.replace('.html', '');
     holiday.url = slugify(holiday.country) + '/' + slug;
+    holiday.name = cleanName(holiday.name);
   }
 
   // Set occasion_id
