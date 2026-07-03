@@ -76,7 +76,7 @@ export async function fetchOccasions(
       name,
       updated_at
     FROM Occasions
-    where o.description IS NOT NULL
+    where description IS NOT NULL
     ORDER BY updated_at DESC
   `);
 
