@@ -1,5 +1,3 @@
-import { Holiday } from "./holidays-api";
-
 export type OccasionImage = {
   url: string;
   thumb?: string;

@@ -28,16 +28,58 @@ export async function generateMetadata({ params }: PageProps) {
     };
   }
 
+  // /holidays/india/2026
   if (isYear(value)) {
     return {
       title: `${country.name} Holidays in ${value} - 11holidays`,
-      description: `Complete list of public holidays in ${country.name} for ${value}. View, download, and integrate ${country.code} holiday data via API.`,
+      description: `View all official public holidays in ${country.name} for ${value}. See holiday dates, weekdays, observances, long weekends, and download the ${value} holiday calendar.`,
+      keywords: [
+        `${country.name} holidays ${value}`,
+        `${country.name} public holidays`,
+        `${country.name} holiday calendar ${value}`,
+        `${country.name} bank holidays ${value}`,
+        `${country.name} national holidays`,
+        `${country.code} holidays`,
+      ],
+      openGraph: {
+        title: `${country.name} Public Holidays ${value}`,
+        description: `Complete list of public holidays in ${country.name} for ${value}.`,
+        type: 'website',
+      },
     };
   }
 
+  // /holidays/india/diwali
+  const slug = `${country.code.toLowerCase()}/${value}`;
+  const { env } = getCloudflareContext();
+  const occasion = await fetchOccasion(env, slug);
+  if (!occasion)
+    return {
+      title: 'Not Found',
+    };
+
+  const metaDescription =
+    occasion.description.length > 160
+      ? `${occasion.description.slice(0, 157)}...`
+      : occasion.description;
+
   return {
-    title: `${value} - 11holidays`,
-    description: `Learn about ${value}, its history, significance, and upcoming holiday dates.`,
+    title: `${occasion.name} in ${country.name} | Dates, History & Holiday Calendar`,
+    description: metaDescription,
+    keywords: [
+      occasion.name,
+      `${occasion.name} ${country.name}`,
+      `${occasion.name} holiday`,
+      `${occasion.name} date`,
+      `${occasion.name} history`,
+      `${occasion.name} significance`,
+      `${country.name} holidays`,
+    ],
+    openGraph: {
+      title: `${occasion.name} in ${country.name}`,
+      description: metaDescription,
+      type: 'article',
+    },
   };
 }
 
@@ -81,5 +123,11 @@ export default async function HolidayPage({ params }: PageProps) {
 
   const holidays = await fetchHolidaysByOcasionId(env, occasion.occasion_id);
 
-  return <OccasionPageContent country={country} occasion={occasion} holidays={holidays} />;
+  return (
+    <OccasionPageContent
+      country={country}
+      occasion={occasion}
+      holidays={holidays}
+    />
+  );
 }
