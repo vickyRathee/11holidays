@@ -6,6 +6,7 @@ export interface Holiday {
   date: string;
   name: string;
   type: string;
+  year?: number;
   description?: string;
   countryCode?: string;
 }
@@ -39,7 +40,7 @@ export async function fetchHolidays(
   const session = env.DB.withSession();
   const sqlQuery = session.prepare(
     `
-        SELECT h.holiday_id, o.name, h.date, o.description, h.occasion_id, h.country, h.type, 
+        SELECT h.holiday_id, o.name, h.date, h.occasion_id, h.country, h.type, 
         h.created_at, h.updated_at
         FROM Holidays as h
         Left Join Occasions as o
@@ -57,6 +58,37 @@ export async function fetchHolidays(
     country: countryCode,
     year,
   };
+}
+
+export async function fetchHolidaysByOcasionId(
+  env: CloudflareEnv,
+  occasion_id: number) {
+  if (env.NEXTJS_ENV === 'development') {
+    return sampleHolidays
+  }
+
+  const session = env.DB.withSession();
+
+  const sqlQuery = session.prepare(`
+  SELECT
+    h.holiday_id,
+    o.name,
+    h.date,
+    h.type,
+    h.year
+  FROM Holidays h
+  INNER JOIN Occasions o
+    ON h.occasion_id = o.occasion_id
+  WHERE h.occasion_id = ?
+    AND h.year BETWEEN
+        CAST(strftime('%Y', 'now') AS INTEGER) - 5
+        AND
+        CAST(strftime('%Y', 'now') AS INTEGER) + 5;
+  `).bind(occasion_id);
+
+  const { results } = await sqlQuery.all<Holiday>();
+
+  return results;
 }
 
 export function formatDate(dateString: string): string {
@@ -90,3 +122,5 @@ export function downloadJSON(data: unknown, filename: string) {
 export function copyToClipboard(text: string): Promise<void> {
   return navigator.clipboard.writeText(text);
 }
+
+export const currentYear = new Date().getFullYear();

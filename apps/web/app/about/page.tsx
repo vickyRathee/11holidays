@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Globe, Code, Users, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { PageLayout } from '../../components/page-layout';
 
 export const metadata = {
   title: 'About Us - 11holidays.com',
@@ -10,7 +11,7 @@ export const metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="mx-auto space-y-12">
+    <PageLayout sidebar={false}>
       <div className="space-y-4 text-center">
         <h1 className="text-4xl font-bold tracking-tight md:text-4xl">
           About us
@@ -149,6 +150,6 @@ export default function AboutPage() {
           </a>
         </Button>
       </div>
-    </div>
+    </PageLayout>
   );
 }

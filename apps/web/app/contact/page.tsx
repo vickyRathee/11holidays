@@ -1,15 +1,11 @@
-import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Mail, MessageSquare, HelpCircle, Github } from 'lucide-react';
+import { Mail, Github } from 'lucide-react';
+import { PageLayout } from '../../components/page-layout';
 
 export const metadata = {
   title: 'Contact Us - 11holidays.com',
@@ -19,7 +15,7 @@ export const metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="mx-auto space-y-8">
+    <PageLayout sidebar={false}>
       <div className="space-y-2 text-center">
         <h1 className="text-4xl font-bold tracking-tight md:text-4xl">
           Contact Us
@@ -100,6 +96,6 @@ export default function ContactPage() {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </PageLayout>
   );
 }

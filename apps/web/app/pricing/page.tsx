@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/card';
 import { Check } from 'lucide-react';
 import Link from 'next/link';
+import { PageLayout } from '../../components/page-layout';
 
 export const metadata = {
   title: 'Pricing - 11holidays.com',
@@ -17,7 +18,7 @@ export const metadata = {
 
 export default function PricingPage() {
   return (
-    <div className="mx-auto space-y-8">
+    <PageLayout sidebar={false}>
       <div className="space-y-2 text-center">
         <h1 className="text-4xl font-bold tracking-tight md:text-4xl">
           Simple, Transparent Pricing
@@ -175,6 +176,6 @@ export default function PricingPage() {
           </Card>
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }

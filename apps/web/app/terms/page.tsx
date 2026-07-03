@@ -1,4 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card';
+import { PageLayout } from '../../components/page-layout';
 
 export const metadata = {
   title: 'Terms of Service - 11holidays.com',
@@ -8,7 +9,7 @@ export const metadata = {
 
 export default function TermsPage() {
   return (
-    <div className="mx-auto space-y-8">
+    <PageLayout sidebar={false}>
       <div className="space-y-2">
         <h1 className="text-4xl font-bold tracking-tight md:text-4xl">
           Terms of Service
@@ -172,6 +173,6 @@ export default function TermsPage() {
           understood, and agree to be bound by these Terms of Service.
         </p>
       </div>
-    </div>
+    </PageLayout>
   );
 }
