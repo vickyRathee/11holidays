@@ -98,8 +98,8 @@ export const importHolidays = async (
   if (!holidays.length) return;
 
   for (const holiday of holidays) {
-    holiday.url =
-      slugify(holiday.country) + '/' + slugify(holiday.url || holiday.name);
+    const slug = holiday.ref_url?.split('/').pop()?.replace('.html', '');
+    holiday.url = slugify(holiday.country) + '/' + slug;
   }
 
   // Set occasion_id
@@ -127,16 +127,16 @@ const bulkInsertHolidays = async (
     )
     VALUES
       ${holidays
-        .map(
-          (h) => `(
+      .map(
+        (h) => `(
             '${h.date}',
             ${new Date(h.date).getUTCFullYear()},
             ${h.occasion_id},
             '${escapeSQL(h.type)}',
             '${escapeSQL(h.country)}'
           )`
-        )
-        .join(", ")}
+      )
+      .join(", ")}
 
     ON CONFLICT(occasion_id, country, year)
     DO UPDATE SET
