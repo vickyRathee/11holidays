@@ -6,6 +6,7 @@ export interface Holiday {
   date: string;
   name: string;
   type: string;
+  url?: string;
   year?: number;
   description?: string;
   countryCode?: string;
@@ -41,6 +42,10 @@ export async function fetchHolidays(
   const sqlQuery = session.prepare(
     `
         SELECT h.holiday_id, o.name, h.date, h.occasion_id, h.country, h.type, 
+        CASE
+          WHEN h.description IS NOT NULL THEN h.url
+          ELSE NULL
+        END AS url,
         h.created_at, h.updated_at
         FROM Holidays as h
         Left Join Occasions as o

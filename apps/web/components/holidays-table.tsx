@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -36,6 +36,7 @@ import {
   Holiday,
 } from '@/lib/holidays-api';
 import { Country } from '@/lib/countries-data';
+import Link from 'next/link';
 
 interface HolidaysTableProps {
   holidays: Holiday[];
@@ -248,7 +249,17 @@ export function HolidaysTable({
                 >
                   <div className="flex items-start justify-between gap-2">
                     <p className="font-medium text-sm leading-snug">
-                      {holiday.name}
+                      {holiday.url ? (
+                        <Link
+                          href={`/holidays/${holiday.url}`}
+                          className="hover:underline"
+                          prefetch={false}
+                        >
+                          {holiday.name}
+                        </Link>
+                      ) : (
+                        holiday.name
+                      )}
                     </p>
                     <Badge variant="secondary" className="shrink-0 text-xs">
                       {holiday.type}
@@ -290,7 +301,19 @@ export function HolidaysTable({
                       <TableCell className="whitespace-nowrap">
                         {getDayOfWeek(holiday.date)}
                       </TableCell>
-                      <TableCell>{holiday.name}</TableCell>
+                      <TableCell>
+                        {holiday.url ? (
+                          <Link
+                            href={`/holidays/${holiday.url}`}
+                            className="hover:underline"
+                            prefetch={false}
+                          >
+                            {holiday.name}
+                          </Link>
+                        ) : (
+                          holiday.name
+                        )}
+                      </TableCell>
                       <TableCell>
                         <Badge variant="secondary">{holiday.type}</Badge>
                       </TableCell>
