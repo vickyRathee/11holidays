@@ -1,14 +1,15 @@
 import { MetadataRoute } from 'next';
 import { COUNTRIES_WITH_SLUG } from '@/lib/countries-data';
+import { fetchOccasions } from '../lib/occassion-api';
+import { currentYear } from '../lib/holidays-api';
+import { getCloudflareContext } from '@opennextjs/cloudflare';
 
 const BASE_URL = 'https://11holidays.com';
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const year = new Date().getFullYear();
-
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const holidaysEntries = COUNTRIES_WITH_SLUG.flatMap((x) => [
     {
-      url: `${BASE_URL}/holidays/${x.code.toLowerCase()}/${year}`,
+      url: `${BASE_URL}/holidays/${x.code.toLowerCase()}/${currentYear}`,
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.7,
@@ -34,50 +35,62 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   })) satisfies MetadataRoute.Sitemap;
 
+  const { env } = getCloudflareContext();
+
+  const occasions = await fetchOccasions(env);
+
+  const occasionsEntries = occasions.map((x) => ({
+    url: `${BASE_URL}/holidays/${x.url}`,
+    lastModified: new Date(x.updated_at!),
+    changeFrequency: 'daily',
+    priority: 0.7,
+  })) satisfies MetadataRoute.Sitemap;
+
   return [
     {
       url: `${BASE_URL}`,
-      lastModified: new Date('2025-12-20T05:07:12.287Z'),
+      lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.7,
     },
     {
       url: `${BASE_URL}/countries`,
-      lastModified: new Date('2025-12-20T05:07:12.287Z'),
+      lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.7,
     },
     {
       url: `${BASE_URL}/calendars`,
-      lastModified: new Date('2025-12-20T05:07:12.287Z'),
+      lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.7,
     },
     {
       url: `${BASE_URL}/pricing`,
-      lastModified: new Date('2025-12-20T05:07:12.287Z'),
+      lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.7,
     },
     {
       url: `${BASE_URL}/about`,
-      lastModified: new Date('2025-12-20T05:07:12.287Z'),
+      lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.7,
     },
     {
       url: `${BASE_URL}/contact`,
-      lastModified: new Date('2025-12-20T05:07:12.287Z'),
+      lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.7,
     },
     {
       url: `${BASE_URL}/terms`,
-      lastModified: new Date('2025-12-20T05:07:12.287Z'),
+      lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.7,
     },
     ...holidaysEntries,
     ...calendarEntries,
+    ...occasionsEntries,
   ];
 }
