@@ -170,11 +170,11 @@ export function OccasionPageContent({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {holidays.map((row) => {
+              {holidays.map((row, i) => {
                 const isCurrent = row.year === currentYear;
                 return (
                   <TableRow
-                    key={row.year}
+                    key={row.year ?? i}
                     className={isCurrent ? 'bg-muted/50' : undefined}
                   >
                     <TableCell className="font-medium">
@@ -201,11 +201,11 @@ export function OccasionPageContent({
 
         {/* Mobile cards */}
         <div className="sm:hidden space-y-2">
-          {holidays.map((row) => {
+          {holidays.map((row, i) => {
             const isCurrent = row.year === currentYear;
             return (
               <Card
-                key={row.year}
+                key={row.year ?? i}
                 className={isCurrent ? 'border-primary' : undefined}
               >
                 <CardContent className="p-4 flex items-center justify-between">
