@@ -3,19 +3,10 @@ import { COUNTRIES_WITH_SLUG } from '@/lib/countries-data';
 import { fetchOccasions } from '../lib/occassion-api';
 import { currentYear } from '../lib/holidays-api';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
-import { cacheLife } from 'next/cache';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 const BASE_URL = 'https://11holidays.com';
-
-async function getCachedOccasions(env: CloudflareEnv) {
-  'use cache';
-
-  cacheLife('hours');
-
-  return fetchOccasions(env);
-}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const holidaysEntries = COUNTRIES_WITH_SLUG.flatMap((x) => [
@@ -48,7 +39,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const { env } = await getCloudflareContext({ async: true });
 
-  const occasions = await getCachedOccasions(env);
+  const occasions = await fetchOccasions(env);
 
   const occasionsEntries = occasions.map((x) => ({
     url: `${BASE_URL}/holidays/${x.url}`,
