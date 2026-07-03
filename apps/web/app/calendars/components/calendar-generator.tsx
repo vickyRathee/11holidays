@@ -12,7 +12,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import {
   generateYearCalendar,
   calendarThemes,
@@ -52,11 +51,11 @@ export function CalendarGenerator({
   const [selectedTheme, setSelectedTheme] = useState<CalendarTheme>('default');
   const [customHeading, setCustomHeading] = useState('');
   const [holidays, setHolidays] = useState<Holiday[]>(
-    holidaysData?.holidays || []
+    holidaysData?.holidays || [],
   );
   const [isLoading, setIsLoading] = useState(false);
   const [isDownloading, setIsDownloading] = useState<'image' | 'pdf' | null>(
-    null
+    null,
   );
   const calendarRef = useRef<HTMLDivElement>(null);
 
@@ -96,7 +95,7 @@ export function CalendarGenerator({
     //loadHolidays();
     if (preselectedCountry !== selectedCountry) {
       const country = COUNTRIES_WITH_SLUG.find(
-        (c) => c.code === selectedCountry
+        (c) => c.code === selectedCountry,
       );
       if (country) redirect(`/calendars/${country.slug}`);
     }
@@ -125,7 +124,7 @@ export function CalendarGenerator({
 
         onclone: (clonedDoc) => {
           const clonedElement = clonedDoc.querySelector(
-            '[data-calendar-preview]'
+            '[data-calendar-preview]',
           );
           if (clonedElement) {
             (clonedElement as HTMLElement).style.transform = 'none';
@@ -182,7 +181,7 @@ export function CalendarGenerator({
         pdfWidth,
         pdfHeight,
         undefined,
-        'FAST'
+        'FAST',
       );
 
       pdf.save(`calendar-${selectedCountry}-${selectedYear}.pdf`);
@@ -194,143 +193,150 @@ export function CalendarGenerator({
   };
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[300px_1fr]">
+    <div className="flex flex-col gap-6">
       <Card>
-        <CardContent className="space-y-6 pt-6">
-          <div className="space-y-2">
-            <Label>Country</Label>
-            <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-              <SelectTrigger className="w-full">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {countries.map((country) => (
-                  <SelectItem key={country.code} value={country.code}>
-                    {country.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Label>Year</Label>
-            <Select value={selectedYear} onValueChange={setSelectedYear}>
-              <SelectTrigger className="w-full">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {Array.from({ length: 10 }, (_, i) => currentYear - 2 + i).map(
-                  (year) => (
-                    <SelectItem key={year} value={year.toString()}>
-                      {year}
-                    </SelectItem>
-                  )
-                )}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Label>View Mode</Label>
-            <RadioGroup
-              value={viewMode}
-              onValueChange={(v) => setViewMode(v as 'year' | 'month')}
-            >
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="year" id="year" />
-                <Label htmlFor="year" className="font-normal cursor-pointer">
-                  Year View
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="month" id="month" />
-                <Label htmlFor="month" className="font-normal cursor-pointer">
-                  Month View
-                </Label>
-              </div>
-            </RadioGroup>
-          </div>
-
-          {viewMode === 'month' && (
-            <div className="space-y-2">
-              <Label>Month</Label>
-              <Select value={selectedMonth} onValueChange={setSelectedMonth}>
+        <CardContent className="p-4">
+          {/* 2-col grid on mobile/tablet → flex row on desktop (md+). Wraps cleanly either way. */}
+          <div className="grid grid-cols-2 gap-3 md:flex md:flex-wrap md:items-end">
+            {/* Country — full width on mobile; flexible on desktop */}
+            <div className="col-span-2 md:min-w-[220px] md:flex-1">
+              <Label className="mb-1 block text-xs">Country</Label>
+              <Select
+                value={selectedCountry}
+                onValueChange={setSelectedCountry}
+              >
                 <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
-                  {Array.from({ length: 12 }, (_, i) => i).map((month) => (
-                    <SelectItem key={month} value={month.toString()}>
-                      {getMonthName(month)}
+                {/* Capped height: long list scrolls instead of filling the screen */}
+                <SelectContent className="max-h-[280px]">
+                  {countries.map((country) => (
+                    <SelectItem key={country.code} value={country.code}>
+                      {country.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
-          )}
 
-          <div className="space-y-2">
-            <Label>Theme</Label>
-            <Select
-              value={selectedTheme}
-              onValueChange={(v) => setSelectedTheme(v as CalendarTheme)}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {Object.entries(calendarThemes).map(([key, theme]) => (
-                  <SelectItem key={key} value={key}>
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="h-4 w-4 rounded border"
-                        style={{ backgroundColor: theme.primary }}
-                      />
-                      {theme.name}
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+            {/* Year + View share a row on mobile */}
+            <div className="md:w-[110px]">
+              <Label className="mb-1 block text-xs">Year</Label>
+              <Select value={selectedYear} onValueChange={setSelectedYear}>
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="max-h-[280px]">
+                  {Array.from(
+                    { length: 10 },
+                    (_, i) => currentYear - 2 + i,
+                  ).map((year) => (
+                    <SelectItem key={year} value={year.toString()}>
+                      {year}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-          <div className="space-y-2">
-            <Label>Custom Heading (Optional)</Label>
-            <Input
-              placeholder="e.g., Company Name 2025"
-              value={customHeading}
-              onChange={(e) => setCustomHeading(e.target.value)}
-            />
-          </div>
+            <div className="md:w-[130px]">
+              <Label className="mb-1 block text-xs">View</Label>
+              <Select
+                value={viewMode}
+                onValueChange={(v) => setViewMode(v as 'year' | 'month')}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="year">Year</SelectItem>
+                  <SelectItem value="month">Month</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
 
-          <div className="space-y-3 pt-4 border-t">
-            <Label>Download</Label>
-            <div className="flex flex-col gap-2">
+            {/* Month — only in month view; full width on mobile */}
+            {viewMode === 'month' && (
+              <div className="col-span-2 md:w-[150px]">
+                <Label className="mb-1 block text-xs">Month</Label>
+                <Select value={selectedMonth} onValueChange={setSelectedMonth}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-[280px]">
+                    {Array.from({ length: 12 }, (_, i) => (
+                      <SelectItem key={i} value={i.toString()}>
+                        {getMonthName(i)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+
+            {/* Theme — full width on mobile (room for the color swatch + name) */}
+            <div className="col-span-2 md:w-[180px]">
+              <Label className="mb-1 block text-xs">Theme</Label>
+              <Select
+                value={selectedTheme}
+                onValueChange={(v) => setSelectedTheme(v as CalendarTheme)}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="max-h-[280px]">
+                  {Object.entries(calendarThemes).map(([key, theme]) => (
+                    <SelectItem key={key} value={key}>
+                      <div className="flex items-center gap-2">
+                        <div
+                          className="h-3 w-3 shrink-0 rounded border"
+                          style={{ backgroundColor: theme.primary }}
+                        />
+                        {theme.name}
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Heading — full width on mobile, wide flexible on desktop */}
+            <div className="col-span-2 md:min-w-[250px] md:flex-[2]">
+              <Label className="mb-1 block text-xs">Heading</Label>
+              <Input
+                placeholder="Company Name 2026"
+                value={customHeading}
+                onChange={(e) => setCustomHeading(e.target.value)}
+              />
+            </div>
+
+            {/* Buttons — side-by-side full width on mobile, inline on desktop */}
+            <div className="col-span-2 grid grid-cols-2 gap-2 md:col-span-1 md:flex md:gap-2">
               <Button
+                className="w-full md:w-auto"
                 onClick={() => handleDownload('image')}
                 disabled={isDownloading !== null || isLoading}
-                className="w-full"
               >
                 {isDownloading === 'image' ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
-                  <Download className="mr-2 h-4 w-4" />
+                  <Download className="h-4 w-4" />
                 )}
-                Download as Image
+                <span className="ml-2">PNG</span>
               </Button>
+
               <Button
+                variant="outline"
+                className="w-full md:w-auto"
                 onClick={() => handleDownload('pdf')}
                 disabled={isDownloading !== null || isLoading}
-                variant="outline"
-                className="w-full"
               >
                 {isDownloading === 'pdf' ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
-                  <Download className="mr-2 h-4 w-4" />
+                  <Download className="h-4 w-4" />
                 )}
-                Download as PDF
+                <span className="ml-2">PDF</span>
               </Button>
             </div>
           </div>

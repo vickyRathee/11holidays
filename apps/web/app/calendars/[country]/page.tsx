@@ -3,7 +3,8 @@ import { CalendarGenerator } from '../components/calendar-generator';
 import { notFound } from 'next/navigation';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { fetchHolidays } from '@/lib/holidays-api';
-import { Breadcrumb } from '../../../components/breadcrumb';
+import { Breadcrumb } from '@/components/breadcrumb';
+import { PageLayout } from '@/components/page-layout';
 
 interface PageProps {
   params: Promise<{
@@ -21,9 +22,31 @@ export async function generateMetadata({ params }: PageProps) {
     };
   }
 
+  const year = new Date().getFullYear();
+
   return {
-    title: `${country.name} Holidays Calendar - 11holidays`,
-    description: ``,
+    title: `${country.name} Holidays Calendar ${year} | Free PDF & PNG Download`,
+    description: `Generate and download a printable ${country.name} holidays calendar for ${year}. Customize themes, view public holidays by month or year, and export as PDF or PNG for free.`,
+    keywords: [
+      `${country.name} holidays`,
+      `${country.name} public holidays`,
+      `${country.name} holiday calendar`,
+      `${country.name} holidays ${year}`,
+      `printable ${country.name} calendar`,
+      `${country.name} holiday planner`,
+      `holiday calendar generator`,
+      `public holiday calendar`,
+    ],
+    openGraph: {
+      title: `${country.name} Holidays Calendar ${year}`,
+      description: `Generate a customizable ${country.name} public holidays calendar and download it as PDF or PNG.`,
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${country.name} Holidays Calendar ${year}`,
+      description: `Create and download a printable ${country.name} holiday calendar for ${year}.`,
+    },
   };
 }
 
@@ -40,7 +63,7 @@ export default async function CalendarGeneratorPage({ params }: PageProps) {
   const holidaysData = await fetchHolidays(env, country.code, currentYear);
 
   return (
-    <div className="mx-auto max-w-[1200px] space-y-8">
+    <PageLayout>
       <Breadcrumb
         items={[
           { label: 'Home', href: '/' },
@@ -48,6 +71,7 @@ export default async function CalendarGeneratorPage({ params }: PageProps) {
           { label: `${country.name} Calendar` },
         ]}
       />
+
       <div className="space-y-2">
         <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
           {country.name} Holidays Calendar
@@ -65,6 +89,6 @@ export default async function CalendarGeneratorPage({ params }: PageProps) {
         preselectedCountry={country.code}
         holidaysData={holidaysData}
       />
-    </div>
+    </PageLayout>
   );
 }
