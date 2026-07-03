@@ -1,5 +1,6 @@
 import { CountryList } from '@/components/country-list';
 import { COUNTRIES_WITH_SLUG } from '@/lib/countries-data';
+import { PageLayout } from '../../components/page-layout';
 
 export const metadata = {
   title: 'All Countries - 11holidays.com',
@@ -11,9 +12,9 @@ export default function CountriesPage() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <div className="mx-auto max-w-[1200px] space-y-8">
+    <PageLayout sidebar={false}>
       <div className="space-y-2">
-        <h1 className="text-4xl font-bold tracking-tight md:text-5xl">
+        <h1 className="text-4xl font-bold tracking-tight md:text-4xl">
           Browse Countries
         </h1>
         <p className="text-lg text-muted-foreground">
@@ -26,6 +27,6 @@ export default function CountriesPage() {
         currentYear={currentYear}
         type="holidays"
       />
-    </div>
+    </PageLayout>
   );
 }

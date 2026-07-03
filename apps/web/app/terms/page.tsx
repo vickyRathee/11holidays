@@ -10,7 +10,7 @@ export default function TermsPage() {
   return (
     <div className="mx-auto space-y-8">
       <div className="space-y-2">
-        <h1 className="text-4xl font-bold tracking-tight md:text-5xl">
+        <h1 className="text-4xl font-bold tracking-tight md:text-4xl">
           Terms of Service
         </h1>
         <p className="text-muted-foreground">Last updated: December 20, 2025</p>

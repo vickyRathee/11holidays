@@ -12,7 +12,7 @@ export default function AboutPage() {
   return (
     <div className="mx-auto space-y-12">
       <div className="space-y-4 text-center">
-        <h1 className="text-4xl font-bold tracking-tight md:text-5xl">
+        <h1 className="text-4xl font-bold tracking-tight md:text-4xl">
           About us
         </h1>
         <p className="text-lg text-muted-foreground max-w-[700px] mx-auto">

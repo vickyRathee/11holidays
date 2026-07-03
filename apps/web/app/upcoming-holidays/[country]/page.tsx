@@ -22,11 +22,10 @@ import {
 } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import { Breadcrumb } from '@/components/breadcrumb';
-import { Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import Image from 'next/image';
 import { CountryFlag } from '@/components/country-flag';
+import { PageLayout } from '@/components/page-layout';
 
 interface PageProps {
   params: Promise<{
@@ -79,136 +78,81 @@ export default async function UpcomingHolidayPage({ params }: PageProps) {
   });
 
   return (
-    <div className="container">
-      <div className="mx-auto space-y-8">
-        <Breadcrumb
-          items={[
-            { label: 'Home', href: '/' },
-            { label: 'Countries', href: '/countries' },
-            { label: `Upcoming holidays in ${country.name}` },
-          ]}
-        />
-        <div className="grid gap-6 lg:grid-cols-12">
-          <div className="lg:col-span-9 space-y-8">
-            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-              <div className="space-y-2">
-                <div className="flex items-center gap-4">
-                  <CountryFlag
-                    countryCode={country.code}
-                    className="w-12 h-8 sm:w-16 sm:h-12 rounded"
-                  />
-                  <h1 className="text-3xl font-bold tracking-tight md:text-5xl">
-                    Upcoming Holidays in {country.name}
-                  </h1>
-                </div>
-                <p className="text-lg text-muted-foreground">
-                  List of upcoming holidays in {country.name} for year {year}
-                </p>
-              </div>
-            </div>
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  Today&apos;s Holiday in {country.name}
-                </CardTitle>
-                <CardDescription>
-                  {format(new Date(), 'EEEE, MMMM d, yyyy')}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {todayHolidays.length === 0 ? (
-                  <div className="flex items-center gap-3 text-muted-foreground">
-                    <p>No holiday in {country.name} today</p>
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {todayHolidays.map((h) => (
-                      <div
-                        key={h.holiday_id}
-                        className="flex items-start justify-between gap-4"
-                      >
-                        <div>
-                          <p className="font-semibold text-lg">{h.name}</p>
-                        </div>
-                        <Badge
-                          variant={
-                            h.type === 'public' ? 'default' : 'secondary'
-                          }
-                        >
-                          {h.type}
-                        </Badge>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-            <h2>
-              Upcoming Holidays ({format(today, 'MMMM yyyy')} -{' '}
-              {format(threeMonthsLater, 'MMMM yyyy')})
-            </h2>
-            <HolidaysTable
-              holidays={upcomingHolidays}
-              country={country}
-              year={year}
-              filter={false}
+    <PageLayout>
+      <Breadcrumb
+        items={[
+          { label: 'Home', href: '/' },
+          { label: 'Countries', href: '/countries' },
+          { label: `Upcoming holidays in ${country.name}` },
+        ]}
+      />
+
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="space-y-2">
+          <div className="flex items-center gap-4">
+            <CountryFlag
+              countryCode={country.code}
+              className="w-12 h-8 sm:w-16 sm:h-12 rounded"
             />
-            <Button variant="outline" asChild className="flex-1">
-              <Link href={`/holidays/${country.code.toLowerCase()}/${year}`}>
-                See all holidays in {year} &rarr;
-              </Link>
-            </Button>
+            <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
+              Upcoming Holidays in {country.name}
+            </h1>
           </div>
-          <div className="lg:col-span-3">
-            <Card className="sticky top-20 border-dashed">
-              <CardContent>
-                <div className="flex flex-col items-center justify-center text-center">
-                  <Badge variant="outline" className="text-xs mb-4">
-                    Ads
-                  </Badge>
-                  <Image
-                    src="/img/dayschedule.svg"
-                    alt="DaySchedule"
-                    className="mb-4"
-                    width={180}
-                    height={40}
-                  />
-                  <p className="text-sm text-muted-foreground mb-8 max-w-xs">
-                    Create your free appointment booking page
-                  </p>
-                  <div className="space-y-3 mb-8 text-left">
-                    <div className="flex items-center gap-2">
-                      <Check className="h-5 w-5 text-primary flex-shrink-0" />
-                      <span className="text-sm">Easy online booking</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Check className="h-5 w-5 text-primary flex-shrink-0" />
-                      <span className="text-sm">Automated reminders</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Check className="h-5 w-5 text-primary flex-shrink-0" />
-                      <span className="text-sm">Client management</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Check className="h-5 w-5 text-primary flex-shrink-0" />
-                      <span className="text-sm">Free forever</span>
-                    </div>
-                  </div>
-                  <Button className="w-full max-w-xs" asChild>
-                    <Link
-                      href="https://dayschedule.com/?utm_source=11holidays"
-                      target="_blank"
-                      rel="nofollow noindex"
-                    >
-                      Create Appointment Page
-                    </Link>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          <p className="text-lg text-muted-foreground">
+            List of upcoming holidays in {country.name} for year {year}
+          </p>
         </div>
       </div>
-    </div>
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-lg">
+            Today&apos;s Holiday in {country.name}
+          </CardTitle>
+          <CardDescription>
+            {format(new Date(), 'EEEE, MMMM d, yyyy')}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {todayHolidays.length === 0 ? (
+            <div className="flex items-center gap-3 text-muted-foreground">
+              <p>No holiday in {country.name} today</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {todayHolidays.map((h) => (
+                <div
+                  key={h.holiday_id}
+                  className="flex items-start justify-between gap-4"
+                >
+                  <div>
+                    <p className="font-semibold text-lg">{h.name}</p>
+                  </div>
+                  <Badge
+                    variant={h.type === 'public' ? 'default' : 'secondary'}
+                  >
+                    {h.type}
+                  </Badge>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+      <h2>
+        Upcoming Holidays ({format(today, 'MMMM yyyy')} -{' '}
+        {format(threeMonthsLater, 'MMMM yyyy')})
+      </h2>
+      <HolidaysTable
+        holidays={upcomingHolidays}
+        country={country}
+        year={year}
+        filter={false}
+      />
+      <Button variant="outline" asChild className="flex-1">
+        <Link href={`/holidays/${country.code.toLowerCase()}/${year}`}>
+          See all holidays in {year} &rarr;
+        </Link>
+      </Button>
+    </PageLayout>
   );
 }
