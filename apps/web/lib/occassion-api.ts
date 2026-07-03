@@ -66,9 +66,10 @@ export async function fetchOccasion(
 export async function fetchOccasions(
   env: CloudflareEnv,
 ) {
-  const session = env.DB.withSession();
+  try {
+    const session = env.DB.withSession();
 
-  const sqlQuery = session.prepare(`
+    const sqlQuery = session.prepare(`
     SELECT
       occasion_id,
       url,
@@ -79,6 +80,10 @@ export async function fetchOccasions(
     ORDER BY updated_at DESC
   `);
 
-  const { results } = await sqlQuery.all<Occasion>();
-  return results;
+    const { results } = await sqlQuery.all<Occasion>();
+    return results;
+  } catch (error) {
+    console.error("Error fetching occasions:", error);
+    return [];
+  }
 }
