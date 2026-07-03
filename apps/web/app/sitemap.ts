@@ -4,6 +4,8 @@ import { fetchOccasions } from '../lib/occassion-api';
 import { currentYear } from '../lib/holidays-api';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 
+export const revalidate = 3600; // 1 hour
+
 const BASE_URL = 'https://11holidays.com';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
