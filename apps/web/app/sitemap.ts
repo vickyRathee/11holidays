@@ -4,7 +4,7 @@ import { fetchOccasions } from '../lib/occassion-api';
 import { currentYear } from '../lib/holidays-api';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 
-export const revalidate = 3600;
+export const dynamic = 'force-dynamic';
 
 const BASE_URL = 'https://11holidays.com';
 

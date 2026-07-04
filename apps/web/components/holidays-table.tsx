@@ -252,7 +252,7 @@ export function HolidaysTable({
                       {holiday.url ? (
                         <Link
                           href={`/holidays/${holiday.url}`}
-                          className="hover:underline"
+                          className="underline"
                           prefetch={false}
                         >
                           {holiday.name}
