@@ -1,3 +1,8 @@
+# *
 User-agent: *
+Content-Signal: ai-train=yes, search=yes, ai-input=yes
+Allow: /
+
+# Sitemaps
 
 Sitemap: https://11holidays.com/sitemap.xml

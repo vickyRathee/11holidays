@@ -79,6 +79,14 @@ export async function generateMetadata({ params }: PageProps) {
       title: `${occasion.name} in ${country.name}`,
       description: metaDescription,
       type: 'article',
+      images: occasion.image?.url
+        ? [
+            {
+              url: occasion.image.url,
+              alt: occasion.image.query || occasion.name,
+            },
+          ]
+        : undefined,
     },
   };
 }
