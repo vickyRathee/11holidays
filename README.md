@@ -2,6 +2,8 @@
 
 Global [holidays API](https://11holidays.com/) for public holidays, bank holidays and observances from 230+ countries.
 
+<img width="999" height="741" alt="Holidays API" src="https://github.com/user-attachments/assets/71a0a2f5-ca0b-4db3-8614-af67af3ac875" />
+
 ## Installation
 
 ```
