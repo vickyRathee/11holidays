@@ -1,9 +1,10 @@
-import './globals.css';
 import { Inter } from 'next/font/google';
 import Link from 'next/link';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Header } from '@/components/header';
 import { Toaster } from '../components/ui/sonner';
+import { GitHubStarPopup } from '../components/github-star-popup';
+import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -65,6 +66,7 @@ export default function RootLayout({
                 </div>
               </div>
             </footer>
+            <GitHubStarPopup />
           </div>
           <Toaster />
         </ThemeProvider>

@@ -47,4 +47,11 @@ app.route(`/countries`, countries);
 app.route(`/holidays`, holidays);
 app.route(`/occasions`, occasions);
 
+app.notFound(async (ctx) => {
+    return ctx.json(
+        { error: "No routes found" },
+        404,
+    );
+});
+
 export default app;
