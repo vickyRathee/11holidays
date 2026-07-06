@@ -10,6 +10,8 @@ interface BreadcrumbProps {
   items: BreadcrumbItem[];
 }
 
+const baseUrl = 'https://11holidays.com';
+
 export function Breadcrumb({ items }: BreadcrumbProps) {
   const schema = {
     '@context': 'https://schema.org',
@@ -19,7 +21,7 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
       position: index + 1,
       name: item.label,
       ...(item.href && {
-        item: item.href,
+        item: new URL(item.href, baseUrl).toString(),
       }),
     })),
   };
