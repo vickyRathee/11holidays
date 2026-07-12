@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import { Occasion } from '../lib/occassion-api';
 import Link from 'next/link';
+import { CountryFlag } from './country-flag';
 
 interface OccasionsListProps {
   occasions: Occasion[];
@@ -71,13 +72,22 @@ export function OccasionsList({
             <Card key={o.occasion_id} className="overflow-hidden group">
               <Link href={o.url} className="block">
                 <AspectRatio ratio={16 / 9} className="bg-muted">
-                  <Image
-                    src={o.image?.url || ''}
-                    alt={o.image?.alt ?? o.name}
-                    fill
-                    loading="lazy"
-                    className="object-cover transition-transform group-hover:scale-105"
-                  />
+                  {o.image?.url ? (
+                    <Image
+                      src={o.image.url}
+                      alt={o.image?.alt ?? o.name}
+                      fill
+                      loading="lazy"
+                      className="object-cover transition-transform group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center p-6">
+                      <CountryFlag
+                        countryCode={o.country!}
+                        className="h-16 w-auto rounded shadow-sm"
+                      />
+                    </div>
+                  )}
                 </AspectRatio>
                 <CardContent className="p-4 space-y-1">
                   <h3 className="font-semibold group-hover:underline">

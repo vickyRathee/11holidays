@@ -12,7 +12,9 @@ export interface Occasion {
   occasion_id: number;
   url: string;
   name: string;
-  description: string;
+  description?: string;
+  date?: string;
+  country?: string;
   image?: OccasionImage | null;
   updated_at?: string;
 }
@@ -72,15 +74,22 @@ export async function fetchOccasions(
 
     const sqlQuery = session.prepare(`
     SELECT
-      occasion_id,
-      url,
-      name,
-      image,
-      updated_at
-    FROM Occasions
-    where description IS NOT NULL
-    ORDER BY updated_at DESC
-  `);
+      o.occasion_id,
+      o.url,
+      o.name,
+      o.image,
+      h.date,
+      h.country,
+      o.updated_at
+    FROM Occasions as o
+    LEFT JOIN Holidays as h
+    on o.occasion_id = h.occasion_id
+    where 
+      h.year = CAST(strftime('%Y', 'now') AS INTEGER) 
+      and o.description IS NOT NULL
+      and (? is null or h.country = ?)
+    ORDER BY o.updated_at DESC
+  `).bind(countryCode || null, countryCode || null);
 
     const { results } = await sqlQuery.all<Occasion>();
     return results.map(x => ({

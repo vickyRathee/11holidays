@@ -59,7 +59,7 @@ export async function generateMetadata({ params }: PageProps) {
     };
 
   const metaDescription =
-    occasion.description.length > 160
+    occasion.description && occasion.description.length > 160
       ? `${occasion.description.slice(0, 157)}...`
       : occasion.description;
 
