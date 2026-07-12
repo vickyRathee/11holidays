@@ -83,7 +83,11 @@ export async function fetchOccasions(
   `);
 
     const { results } = await sqlQuery.all<Occasion>();
-    return results;
+    return results.map(x => ({
+      ...x,
+      image: x.image ? JSON.parse(x.image as unknown as string) as OccasionImage : null
+    }));
+
   } catch (error) {
     console.error("Error fetching occasions:", error);
     return [];

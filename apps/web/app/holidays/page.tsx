@@ -3,6 +3,8 @@ import { OccasionsList } from '@/components/occasions-list';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { fetchOccasions } from '@/lib/occassion-api';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Holidays - 11holidays.com',
   description:
