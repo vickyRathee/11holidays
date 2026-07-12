@@ -67,7 +67,6 @@ export async function fetchOccasion(
 
 export async function fetchOccasions(
   env: CloudflareEnv,
-  countryCode?: string
 ) {
   try {
     const session = env.DB.withSession();
@@ -87,9 +86,8 @@ export async function fetchOccasions(
     where 
       h.year = CAST(strftime('%Y', 'now') AS INTEGER) 
       and o.description IS NOT NULL
-      and (? is null or h.country = ?)
     ORDER BY o.updated_at DESC
-  `).bind(countryCode || null, countryCode || null);
+  `);
 
     const { results } = await sqlQuery.all<Occasion>();
     return results.map(x => ({
@@ -99,6 +97,59 @@ export async function fetchOccasions(
 
   } catch (error) {
     console.error("Error fetching occasions:", error);
+    return [];
+  }
+}
+
+export async function fetchOccasionByCountry(
+  env: CloudflareEnv,
+  countryCode: string,
+  search?: string
+) {
+  try {
+    const session = env.DB.withSession();
+
+    const sqlQuery = session
+      .prepare(`
+        SELECT
+          o.occasion_id,
+          o.url,
+          o.name,
+          o.image,
+          h.date,
+          h.country,
+          o.updated_at
+        FROM Occasions AS o
+        LEFT JOIN Holidays AS h
+          ON o.occasion_id = h.occasion_id
+        WHERE
+          h.year = CAST(strftime('%Y', 'now') AS INTEGER)
+          AND o.description IS NOT NULL
+          AND h.country = ?
+          AND (
+            ? IS NULL
+            OR ? = ''
+            OR h.name LIKE ?
+          )
+        ORDER BY o.updated_at DESC
+      `)
+      .bind(
+        countryCode,
+        search ?? null,
+        search ?? '',
+        `%${search ?? ''}%`
+      );
+
+    const { results } = await sqlQuery.all<Occasion>();
+
+    return results.map((x) => ({
+      ...x,
+      image: x.image
+        ? (JSON.parse(x.image as unknown as string) as OccasionImage)
+        : null,
+    }));
+  } catch (error) {
+    console.error('Error fetching occasions:', error);
     return [];
   }
 }

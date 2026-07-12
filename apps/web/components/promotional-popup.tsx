@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
 import { useEffect, useState } from 'react';
 import { Github, X, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-const STORAGE_KEY = 'gh-star-popup-dismissed-at';
+const STORAGE_KEY = 'ds-dismissed-at';
 const ONE_MONTH_MS = 30 * 24 * 60 * 60 * 1000;
-const GITHUB_URL = 'https://github.com/vickyRathee/11holidays';
+const DS_URL = 'https://dayschedule.com/?utm_source=11holidays';
 
-export function GitHubStarPopup() {
+export function PromotionalPopup() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export function GitHubStarPopup() {
   return (
     <div
       role="dialog"
-      aria-label="Star us on GitHub"
+      aria-label="Create your appointment booking page"
       className="fixed bottom-4 right-4 z-50 w-[calc(100vw-2rem)] max-w-sm rounded-lg border bg-background p-4 shadow-lg animate-in slide-in-from-bottom-4 fade-in"
     >
       <button
@@ -53,15 +53,17 @@ export function GitHubStarPopup() {
           <Github className="h-5 w-5" />
         </div>
         <div className="flex-1">
-          <h3 className="text-sm font-semibold">Enjoying the app?</h3>
+          <h3 className="text-sm font-semibold">
+            Need an appointment booking system?
+          </h3>
           <p className="mt-1 text-sm text-muted-foreground">
-            Support the project by starring it on GitHub.
+            Create a professional booking page in minutes. No coding required.
           </p>
           <div className="mt-3 flex gap-2">
             <Button size="sm" asChild onClick={dismiss}>
-              <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">
+              <a href={DS_URL} target="_blank" rel="noopener noreferrer">
                 <Star className="h-4 w-4" />
-                Star on GitHub
+                Create Booking Page
               </a>
             </Button>
             <Button size="sm" variant="ghost" onClick={dismiss}>

@@ -1,24 +1,42 @@
 import { PageLayout } from '@/components/page-layout';
 import { OccasionsList } from '@/components/occasions-list';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
-import { fetchOccasions } from '@/lib/occassion-api';
-import { getCountryByCode, getCountryBySlug } from '@/lib/countries-data';
+import { fetchOccasionByCountry } from '@/lib/occassion-api';
+import { getCountryByCode } from '@/lib/countries-data';
 import { notFound } from 'next/navigation';
+import { HolidaysFilters } from '@/components/holidays-filter';
 
 interface PageProps {
   params: Promise<{
     country: string;
   }>;
+  searchParams: Promise<{
+    search?: string;
+  }>;
 }
 
-export const metadata = {
-  title: 'Holidays - 11holidays.com',
-  description:
-    'Browse public holidays for 230+ countries. Select a country to view its holiday list.',
-};
-
-export default async function HolidaysPage({ params }: PageProps) {
+export async function generateMetadata({ params }: PageProps) {
   const { country: countryCode } = await params;
+
+  const country = getCountryByCode(countryCode);
+  if (!country) {
+    notFound();
+  }
+
+  const year = new Date().getFullYear();
+
+  return {
+    title: `${country.name} Holiday & Festival List ${year} | 11holidays.com`,
+    description: `Explore the complete list of public holidays, religious festivals, observances, and national celebrations in ${country.name} for ${year}. Browse holiday dates, significance and upcoming events.`,
+  };
+}
+
+export default async function HolidaysPage({
+  params,
+  searchParams,
+}: PageProps) {
+  const { country: countryCode } = await params;
+  const { search = '' } = await searchParams;
 
   const country = getCountryByCode(countryCode);
   if (!country) {
@@ -28,25 +46,27 @@ export default async function HolidaysPage({ params }: PageProps) {
   const currentYear = new Date().getFullYear();
   const { env } = getCloudflareContext();
 
-  const occasions = await fetchOccasions(env, country.code);
+  const occasions = await fetchOccasionByCountry(env, country.code, search);
 
   return (
-    <PageLayout sidebar={false}>
+    <PageLayout>
       <div className="space-y-2">
         <h1 className="text-4xl font-bold tracking-tight md:text-4xl">
           Holidays in {country.name}
         </h1>
         <p className="text-lg text-muted-foreground">
-          List of holidays in {country.name} in {currentYear}
+          List of public holidays, religious festivals, observances, and
+          national celebrations in {country.name} - Year {currentYear}
         </p>
       </div>
 
-      <OccasionsList
-        occasions={occasions}
-        title={null}
-        showBrowseAll={false}
-        emptyMessage={'No holidays found.'}
+      <HolidaysFilters
+        countryCode={country.code}
+        showSearch={true}
+        search={search}
       />
+
+      <OccasionsList occasions={occasions} />
     </PageLayout>
   );
 }

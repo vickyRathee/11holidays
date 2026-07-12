@@ -6,9 +6,9 @@ import { fetchOccasions } from '@/lib/occassion-api';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Holidays - 11holidays.com',
+  title: 'Holidays List - 11holidays.com',
   description:
-    'Browse public holidays for 230+ countries. Select a country to view its holiday list.',
+    'Browse public and religious holidays globally. Pick a country or search by name.',
 };
 
 export default async function HolidaysPage() {
@@ -18,7 +18,7 @@ export default async function HolidaysPage() {
   const occasions = await fetchOccasions(env);
 
   return (
-    <PageLayout sidebar={false}>
+    <PageLayout>
       <div className="space-y-2">
         <h1 className="text-4xl font-bold tracking-tight md:text-4xl">
           Holidays in {currentYear}
@@ -28,12 +28,7 @@ export default async function HolidaysPage() {
         </p>
       </div>
 
-      <OccasionsList
-        occasions={occasions}
-        title={null}
-        showBrowseAll={false}
-        emptyMessage={'No holidays found.'}
-      />
+      <OccasionsList occasions={occasions} />
     </PageLayout>
   );
 }
