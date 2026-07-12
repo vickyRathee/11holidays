@@ -4,7 +4,6 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { Header } from '@/components/header';
 import { Toaster } from '../components/ui/sonner';
 import { PromotionalPopup } from '../components/promotional-popup';
-// @ts-expect-error: Allow side-effect CSS import without type declarations
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
