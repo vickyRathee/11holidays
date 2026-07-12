@@ -65,6 +65,7 @@ export async function fetchOccasion(
 
 export async function fetchOccasions(
   env: CloudflareEnv,
+  countryCode?: string
 ) {
   try {
     const session = env.DB.withSession();
@@ -74,6 +75,7 @@ export async function fetchOccasions(
       occasion_id,
       url,
       name,
+      image,
       updated_at
     FROM Occasions
     where description IS NOT NULL
