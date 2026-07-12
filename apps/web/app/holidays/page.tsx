@@ -11,7 +11,7 @@ export const metadata = {
 
 export default async function HolidaysPage() {
   const currentYear = new Date().getFullYear();
-  const { env } = getCloudflareContext();
+  const { env } = await getCloudflareContext({ async: true });
 
   const occasions = await fetchOccasions(env);
 
@@ -32,7 +32,6 @@ export default async function HolidaysPage() {
         showBrowseAll={false}
         emptyMessage={'No holidays found.'}
       />
-
     </PageLayout>
   );
 }
