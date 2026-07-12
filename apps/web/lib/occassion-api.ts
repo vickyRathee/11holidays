@@ -104,7 +104,6 @@ export async function fetchOccasions(
 export async function fetchOccasionByCountry(
   env: CloudflareEnv,
   countryCode: string,
-  search?: string
 ) {
   try {
     const session = env.DB.withSession();
@@ -126,19 +125,9 @@ export async function fetchOccasionByCountry(
           h.year = CAST(strftime('%Y', 'now') AS INTEGER)
           AND o.description IS NOT NULL
           AND h.country = ?
-          AND (
-            ? IS NULL
-            OR ? = ''
-            OR h.name LIKE ?
-          )
         ORDER BY o.updated_at DESC
       `)
-      .bind(
-        countryCode,
-        search ?? null,
-        search ?? '',
-        `%${search ?? ''}%`
-      );
+      .bind(countryCode);
 
     const { results } = await sqlQuery.all<Occasion>();
 
