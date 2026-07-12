@@ -46,7 +46,7 @@ export default async function HolidaysPage({
   const currentYear = new Date().getFullYear();
   const { env } = getCloudflareContext();
 
-  const occasions = await fetchOccasionByCountry(env, country.code, search);
+  const occasions = await fetchOccasionByCountry(env, country.code);
 
   return (
     <PageLayout>
