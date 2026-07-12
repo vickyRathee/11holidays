@@ -78,7 +78,7 @@ export default async function UpcomingHolidayPage({ params }: PageProps) {
   });
 
   return (
-    <PageLayout>
+    <PageLayout country={country}>
       <Breadcrumb
         items={[
           { label: 'Home', href: '/' },

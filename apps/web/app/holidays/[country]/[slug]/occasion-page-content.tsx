@@ -66,7 +66,7 @@ export function OccasionPageContent({
   ];
 
   return (
-    <PageLayout>
+    <PageLayout country={country}>
       <Breadcrumb
         items={[
           { label: 'Home', href: '/' },

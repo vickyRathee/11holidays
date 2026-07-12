@@ -63,7 +63,7 @@ export function HolidayPageContent({
   };
 
   return (
-    <PageLayout>
+    <PageLayout country={country}>
       <Breadcrumb
         items={[
           { label: 'Home', href: '/' },
