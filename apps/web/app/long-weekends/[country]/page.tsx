@@ -57,7 +57,7 @@ export default async function LongWeekendsPage({ params }: PageProps) {
     .slice(0, 5);
 
   return (
-    <PageLayout>
+    <PageLayout country={country}>
       <Breadcrumb
         items={[
           { label: 'Home', href: '/' },

@@ -49,7 +49,7 @@ export default async function HolidaysPage({
   const occasions = await fetchOccasionByCountry(env, country.code);
 
   return (
-    <PageLayout>
+    <PageLayout country={country}>
       <div className="space-y-2">
         <h1 className="text-4xl font-bold tracking-tight md:text-4xl">
           Holidays in {country.name}

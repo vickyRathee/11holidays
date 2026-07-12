@@ -63,7 +63,7 @@ export default async function CalendarGeneratorPage({ params }: PageProps) {
   const holidaysData = await fetchHolidays(env, country.code, currentYear);
 
   return (
-    <PageLayout>
+    <PageLayout country={country}>
       <Breadcrumb
         items={[
           { label: 'Home', href: '/' },
