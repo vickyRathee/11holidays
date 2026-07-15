@@ -2,6 +2,7 @@ import { PageLayout } from '@/components/page-layout';
 import { OccasionsList } from '@/components/occasions-list';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { fetchOccasions } from '@/lib/occassion-api';
+import { currentYear } from '../../lib/holidays-api';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,7 +13,6 @@ export const metadata = {
 };
 
 export default async function HolidaysPage() {
-  const currentYear = new Date().getFullYear();
   const { env } = await getCloudflareContext({ async: true });
 
   const occasions = await fetchOccasions(env);

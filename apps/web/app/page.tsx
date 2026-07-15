@@ -11,22 +11,31 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Calendar, Globe, Code } from 'lucide-react';
+import { currentYear } from '../lib/holidays-api';
+import { fetchUpcomingHolidays } from '../lib/occassion-api';
+import { getCloudflareContext } from '@opennextjs/cloudflare';
+import { OccasionsList } from '../components/occasions-list';
+
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: `Holidays API & Calendar for ${new Date().getFullYear()} - 11holiday.com`,
+  title: `Holidays API & Calendar for ${currentYear} - 11holiday.com`,
   description:
     'Access public holidays for 230+ countries. Get holiday data via API with our free service. Perfect for developers and businesses.',
   keywords: [
     'holidays',
     'public holidays',
-    'API',
+    'Holidays API',
     'calendar',
     'international holidays',
   ],
 };
 
-export default function Home() {
-  const currentYear = new Date().getFullYear();
+export default async function Home() {
+  const { env, cf } = await getCloudflareContext({ async: true });
+
+  const countryCode = cf?.country ?? 'US';
+  const upcomingHolidays = await fetchUpcomingHolidays(env, countryCode);
 
   return (
     <div className="container py-8 md:py-12 lg:py-16">
@@ -144,6 +153,11 @@ export default function Home() {
               </Button>
             ))}
           </div>
+        </div>
+
+        <div className="w-full mt-8 space-y-4 text-left">
+          <h2 className="text-3xl font-bold">Upcoming Holidays</h2>
+          <OccasionsList occasions={upcomingHolidays} />
         </div>
       </div>
     </div>
