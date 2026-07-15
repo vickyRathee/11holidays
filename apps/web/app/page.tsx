@@ -10,7 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Calendar, Globe, Code } from 'lucide-react';
+import { Calendar, Globe, Code, ArrowRight } from 'lucide-react';
 import { currentYear } from '../lib/holidays-api';
 import { fetchUpcomingHolidays } from '../lib/occassion-api';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
@@ -120,7 +120,14 @@ export default async function Home() {
         </div>
 
         <div className="w-full mt-8 space-y-4 text-left">
-          <h2 className="text-3xl font-bold">Popular Countries</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-3xl font-bold">Popular Countries</h2>
+            <Button variant="outline" size="sm" asChild>
+              <Link href="/countries">
+                View All <ArrowRight className="w-4 h-4" />
+              </Link>
+            </Button>
+          </div>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {[
               { code: 'US', name: 'United States' },
@@ -156,7 +163,16 @@ export default async function Home() {
         </div>
 
         <div className="w-full mt-8 space-y-4 text-left">
-          <h2 className="text-3xl font-bold">Upcoming Holidays</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-3xl font-bold">Upcoming Holidays </h2>
+
+            <Button variant="outline" size="sm" asChild>
+              <Link href="/holidays">
+                View All <ArrowRight className="w-4 h-4" />
+              </Link>
+            </Button>
+          </div>
+
           <OccasionsList occasions={upcomingHolidays} />
         </div>
       </div>

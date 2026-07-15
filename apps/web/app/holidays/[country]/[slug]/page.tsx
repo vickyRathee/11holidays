@@ -3,7 +3,7 @@ import { fetchHolidays, fetchHolidaysByOcasionId } from '@/lib/holidays-api';
 import { getCountryByCode } from '@/lib/countries-data';
 import { HolidayPageContent } from './holiday-page-content';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
-import { fetchOccasion } from '@/lib/occassion-api';
+import { fetchOccasion, fetchUpcomingHolidays } from '@/lib/occassion-api';
 import { OccasionPageContent } from './occasion-page-content';
 
 interface PageProps {
@@ -129,13 +129,17 @@ export default async function HolidayPage({ params }: PageProps) {
     notFound();
   }
 
-  const holidays = await fetchHolidaysByOcasionId(env, occasion.occasion_id);
+  const [holidays, upcomingHolidays] = await Promise.all([
+    fetchHolidaysByOcasionId(env, occasion.occasion_id),
+    fetchUpcomingHolidays(env, country.code, 4),
+  ]);
 
   return (
     <OccasionPageContent
       country={country}
       occasion={occasion}
       holidays={holidays}
+      upcomingHolidays={upcomingHolidays}
     />
   );
 }
