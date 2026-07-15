@@ -4,12 +4,7 @@ import { useMemo } from 'react';
 import { format, parseISO } from 'date-fns';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { Separator } from '@/components/ui/separator';
-import {
-  CalendarDays,
-  CalendarRange,
-  ListOrdered,
-  Palmtree,
-} from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -25,45 +20,28 @@ import { Country } from '@/lib/countries-data';
 import { currentYear, Holiday } from '@/lib/holidays-api';
 import Image from 'next/image';
 import { Breadcrumb } from '@/components/breadcrumb';
+import { Button } from '@/components/ui/button';
+import { OccasionsList } from '@/components/occasions-list';
 
 interface OccasionPageContentProps {
   country: Country;
   occasion: Occasion;
   holidays: Holiday[];
+  upcomingHolidays: Occasion[];
 }
 
 export function OccasionPageContent({
   country,
   occasion,
   holidays,
+  upcomingHolidays,
 }: OccasionPageContentProps) {
   const currentYearRow = useMemo(
     () => holidays.find((d) => d.year === currentYear),
     [holidays],
   );
 
-  const internalLinks = [
-    {
-      to: `/upcoming-holidays/${country.slug}`,
-      label: 'Upcoming holidays',
-      icon: CalendarDays,
-    },
-    {
-      to: `/long-weekends/${country.slug}`,
-      label: `Upcoming long weekends in ${country.name}`,
-      icon: Palmtree,
-    },
-    {
-      to: `/holidays/${country.code.toLowerCase()}/${currentYear}`,
-      label: `All holidays in ${country.name}`,
-      icon: ListOrdered,
-    },
-    {
-      to: `/calendars/${country.slug}`,
-      label: `${country.name} holidays calendar`,
-      icon: CalendarRange,
-    },
-  ];
+  const countryCode = country.code.toLowerCase();
 
   return (
     <PageLayout country={country}>
@@ -229,26 +207,20 @@ export function OccasionPageContent({
 
       <Separator />
 
-      <section className="space-y-4">
-        <h2 className="text-xl font-semibold flex items-center gap-2">
-          Explore more
-        </h2>
-        <div className="grid gap-3 sm:grid-cols-2">
-          {internalLinks.map((link) => {
-            const Icon = link.icon;
-            return (
-              <Link
-                key={link.to}
-                href={link.to}
-                prefetch={false}
-                className="group flex items-center gap-3 rounded-md border p-4 hover:bg-accent hover:text-accent-foreground transition-colors"
-              >
-                <Icon className="h-5 w-5 text-muted-foreground group-hover:text-foreground" />
-                <span className="text-sm font-medium">{link.label}</span>
-              </Link>
-            );
-          })}
+      <section className="w-full mt-8 space-y-4 text-left">
+        <div className="flex items-center justify-between">
+          <h2 className="text-3xl font-bold">
+            Explore more holidays in {country.name}
+          </h2>
+
+          <Button variant="outline" size="sm" asChild>
+            <Link href={`/holidays/${countryCode}`}>
+              View All <ArrowRight className="w-4 h-4" />
+            </Link>
+          </Button>
         </div>
+
+        <OccasionsList occasions={upcomingHolidays} />
       </section>
     </PageLayout>
   );
