@@ -1,3 +1,5 @@
+import { format } from "date-fns";
+
 export type OccasionImage = {
   url: string;
   thumb?: string;
@@ -13,7 +15,7 @@ export interface Occasion {
   url: string;
   name: string;
   description?: string;
-  date?: string;
+  date: string;
   country?: string;
   image?: OccasionImage | null;
   updated_at?: string;
@@ -142,3 +144,19 @@ export async function fetchOccasionByCountry(
     return [];
   }
 }
+
+export async function fetchUpcomingHolidays(
+  env: CloudflareEnv,
+  countryCode: string,
+  limit = 8
+) {
+  const holidays = await fetchOccasionByCountry(env, countryCode);
+
+  const today = format(new Date(), 'yyyy-MM-dd');
+
+  return holidays
+    .filter((holiday) => holiday.date >= today)
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .slice(0, limit);
+}
+
