@@ -71,6 +71,11 @@ export default function RootLayout({
           <Toaster />
         </ThemeProvider>
       </body>
+      <script
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8402459453084519"
+        crossOrigin="anonymous"
+      />
     </html>
   );
 }

@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils';
 import { Country } from '../lib/countries-data';
 import { currentYear } from '../lib/holidays-api';
 import Link from 'next/link';
+import Script from 'next/script';
 
 type AdCard = {
   to: string;
@@ -85,8 +86,31 @@ export function InternalLinksAd({ country, className }: InternalLinksAdProps) {
         </Badge>
       </div>
 
-      {cards.map((c) => {
+      {cards.map((c, i) => {
         const Icon = c.icon;
+
+        if (i === 2) {
+          return (
+            <>
+              <div>
+                <ins
+                  className="adsbygoogle"
+                  style={{ display: 'block' }}
+                  data-ad-client="ca-pub-8402459453084519"
+                  data-ad-slot="3528829817"
+                  data-ad-format="auto"
+                  data-full-width-responsive="true"
+                />
+                <Script strategy="afterInteractive" id="adsbygoogle-init">
+                  {`
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                  `}
+                </Script>
+              </div>
+            </>
+          );
+        }
+
         return (
           <Card
             key={c.to + c.title}
