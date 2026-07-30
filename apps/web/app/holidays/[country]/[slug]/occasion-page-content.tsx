@@ -22,6 +22,7 @@ import Image from 'next/image';
 import { Breadcrumb } from '@/components/breadcrumb';
 import { Button } from '@/components/ui/button';
 import { OccasionsList } from '@/components/occasions-list';
+import Script from 'next/script';
 
 interface OccasionPageContentProps {
   country: Country;
@@ -121,7 +122,21 @@ export function OccasionPageContent({
         </p>
       </section>
 
-      <Separator />
+      <div>
+        <ins
+          className="adsbygoogle"
+          style={{ display: 'block' }}
+          data-ad-client="ca-pub-8402459453084519"
+          data-ad-slot="3130208712"
+          data-ad-format="auto"
+          data-full-width-responsive="true"
+        />
+        <Script strategy="afterInteractive" id="adsbygoogle-init">
+          {`
+            (adsbygoogle = window.adsbygoogle || []).push({});
+          `}
+        </Script>
+      </div>
 
       <section className="space-y-4">
         <div>
