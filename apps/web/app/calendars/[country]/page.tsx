@@ -5,6 +5,11 @@ import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { fetchHolidays } from '@/lib/holidays-api';
 import { Breadcrumb } from '@/components/breadcrumb';
 import { PageLayout } from '@/components/page-layout';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { OccasionsList } from '@/components/occasions-list';
+import { ArrowRight } from 'lucide-react';
+import { fetchUpcomingOccasions } from '@/lib/occassion-api';
 
 interface PageProps {
   params: Promise<{
@@ -62,6 +67,9 @@ export default async function CalendarGeneratorPage({ params }: PageProps) {
   const { env } = getCloudflareContext();
   const holidaysData = await fetchHolidays(env, country.code, currentYear);
 
+  const upcomingOccasions = await fetchUpcomingOccasions(env, country.code, 4);
+  const countryCode = country.code.toLowerCase();
+
   return (
     <PageLayout country={country}>
       <Breadcrumb
@@ -89,6 +97,22 @@ export default async function CalendarGeneratorPage({ params }: PageProps) {
         preselectedCountry={country.code}
         holidaysData={holidaysData}
       />
+
+      <section className="w-full mt-8 space-y-4 text-left">
+        <div className="flex items-center justify-between">
+          <h2 className="text-3xl font-bold">
+            Explore holidays in {country.name}
+          </h2>
+
+          <Button variant="outline" size="sm" asChild>
+            <Link href={`/holidays/${countryCode}`}>
+              View All <ArrowRight className="w-4 h-4" />
+            </Link>
+          </Button>
+        </div>
+
+        <OccasionsList occasions={upcomingOccasions} />
+      </section>
     </PageLayout>
   );
 }

@@ -3,6 +3,7 @@ import { OccasionsList } from '@/components/occasions-list';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { fetchOccasions } from '@/lib/occassion-api';
 import { currentYear } from '@/lib/holidays-api';
+import { Button } from '@/components/ui/button';
 
 export const dynamic = 'force-dynamic';
 
@@ -44,24 +45,33 @@ export default async function HolidaysPage({
       <OccasionsList occasions={occasions} />
 
       {(hasPrevious || hasNext) && (
-        <nav aria-label="Pagination">
-          {hasPrevious && (
-            <a
-              href={
-                previousOffset === 0
-                  ? '/holidays'
-                  : `/holidays?offset=${previousOffset}`
-              }
-              rel="prev"
-            >
-              Previous
-            </a>
+        <nav
+          aria-label="Pagination"
+          className="flex items-center justify-between gap-4"
+        >
+          {hasPrevious ? (
+            <Button variant="outline" asChild>
+              <a
+                href={
+                  previousOffset === 0
+                    ? '/holidays'
+                    : `/holidays?offset=${previousOffset}`
+                }
+                rel="prev"
+              >
+                Previous
+              </a>
+            </Button>
+          ) : (
+            <div />
           )}
 
           {hasNext && (
-            <a href={`/holidays?offset=${nextOffset}`} rel="next">
-              Next
-            </a>
+            <Button variant="outline" asChild>
+              <a href={`/holidays?offset=${nextOffset}`} rel="next">
+                Next
+              </a>
+            </Button>
           )}
         </nav>
       )}

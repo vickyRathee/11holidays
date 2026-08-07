@@ -12,6 +12,9 @@ import { generateLongWeekends } from '@/lib/long-weekends';
 import { CountryFlag } from '@/components/country-flag';
 import { LongWeekendsTable } from '@/components/long-weekends-table';
 import { PageLayout } from '@/components/page-layout';
+import { OccasionsList } from '../../../components/occasions-list';
+import { ArrowRight } from 'lucide-react';
+import { fetchUpcomingOccasions } from '../../../lib/occassion-api';
 
 interface PageProps {
   params: Promise<{
@@ -55,6 +58,9 @@ export default async function LongWeekendsPage({ params }: PageProps) {
   const upcoming = longWeekends
     .filter((lw) => isAfter(parseISO(lw.endDate), today))
     .slice(0, 5);
+
+  const upcomingOccasions = await fetchUpcomingOccasions(env, country.code, 4);
+  const countryCode = country.code.toLowerCase();
 
   return (
     <PageLayout country={country}>
@@ -140,11 +146,21 @@ export default async function LongWeekendsPage({ params }: PageProps) {
 
         <LongWeekendsTable longWeekends={longWeekends} />
 
-        <Button variant="outline" asChild className="flex-1">
-          <Link href={`/holidays/${country.code.toLowerCase()}/${year}`}>
-            See all holidays in {year} &rarr;
-          </Link>
-        </Button>
+        <section className="w-full mt-8 space-y-4 text-left">
+          <div className="flex items-center justify-between">
+            <h2 className="text-3xl font-bold">
+              Explore more holidays in {country.name}
+            </h2>
+
+            <Button variant="outline" size="sm" asChild>
+              <Link href={`/holidays/${countryCode}`}>
+                View All <ArrowRight className="w-4 h-4" />
+              </Link>
+            </Button>
+          </div>
+
+          <OccasionsList occasions={upcomingOccasions} />
+        </section>
       </section>
     </PageLayout>
   );
