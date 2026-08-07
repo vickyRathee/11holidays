@@ -26,6 +26,9 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { CountryFlag } from '@/components/country-flag';
 import { PageLayout } from '@/components/page-layout';
+import { fetchUpcomingOccasions } from '@/lib/occassion-api';
+import { ArrowRight } from 'lucide-react';
+import { OccasionsList } from '@/components/occasions-list';
 
 interface PageProps {
   params: Promise<{
@@ -76,6 +79,9 @@ export default async function UpcomingHolidayPage({ params }: PageProps) {
       end: threeMonthsLater,
     });
   });
+
+  const upcomingOccasions = await fetchUpcomingOccasions(env, country.code, 4);
+  const countryCode = country.code.toLowerCase();
 
   return (
     <PageLayout country={country}>
@@ -138,21 +144,34 @@ export default async function UpcomingHolidayPage({ params }: PageProps) {
           )}
         </CardContent>
       </Card>
+
       <h2>
         Upcoming Holidays ({format(today, 'MMMM yyyy')} -{' '}
         {format(threeMonthsLater, 'MMMM yyyy')})
       </h2>
+
       <HolidaysTable
         holidays={upcomingHolidays}
         country={country}
         year={year}
         filter={false}
       />
-      <Button variant="outline" asChild className="flex-1">
-        <Link href={`/holidays/${country.code.toLowerCase()}/${year}`}>
-          See all holidays in {year} &rarr;
-        </Link>
-      </Button>
+
+      <section className="w-full mt-8 space-y-4 text-left">
+        <div className="flex items-center justify-between">
+          <h2 className="text-3xl font-bold">
+            Explore more holidays in {country.name}
+          </h2>
+
+          <Button variant="outline" size="sm" asChild>
+            <Link href={`/holidays/${countryCode}`}>
+              View All <ArrowRight className="w-4 h-4" />
+            </Link>
+          </Button>
+        </div>
+
+        <OccasionsList occasions={upcomingOccasions} />
+      </section>
     </PageLayout>
   );
 }

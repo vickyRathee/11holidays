@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/card';
 import { Calendar, Globe, Code, ArrowRight } from 'lucide-react';
 import { currentYear } from '../lib/holidays-api';
-import { fetchUpcomingHolidays } from '../lib/occassion-api';
+import { fetchUpcomingOccasions } from '../lib/occassion-api';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { OccasionsList } from '../components/occasions-list';
 
@@ -35,7 +35,7 @@ export default async function Home() {
   const { env, cf } = await getCloudflareContext({ async: true });
 
   const countryCode = cf?.country ?? 'US';
-  const upcomingHolidays = await fetchUpcomingHolidays(env, countryCode);
+  const upcomingOccasions = await fetchUpcomingOccasions(env, countryCode);
 
   return (
     <div className="container py-8 md:py-12 lg:py-16">
@@ -173,7 +173,7 @@ export default async function Home() {
             </Button>
           </div>
 
-          <OccasionsList occasions={upcomingHolidays} />
+          <OccasionsList occasions={upcomingOccasions} />
         </div>
       </div>
     </div>

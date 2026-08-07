@@ -49,8 +49,11 @@ export function OccasionPageContent({
       <Breadcrumb
         items={[
           { label: 'Home', href: '/' },
-          { label: 'Countries', href: '/countries' },
-          { label: `${country.name}` },
+          { label: 'Holidays', href: '/holidays' },
+          {
+            label: `${country.name} Holidays`,
+            href: `/holidays/${countryCode}`,
+          },
         ]}
       />
 

@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { Occasion } from '../lib/occassion-api';
 import Link from 'next/link';
 import { CountryFlag } from './country-flag';
+import { formatDate, getDayOfWeek } from '../lib/holidays-api';
+import { Calendar } from 'lucide-react';
 
 interface OccasionsListProps {
   occasions: Occasion[];
@@ -44,13 +46,19 @@ export function OccasionsList({
                     </div>
                   )}
                 </AspectRatio>
-                <CardContent className="p-4 space-y-1">
-                  <h3 className="font-semibold group-hover:underline">
-                    {o.name}
-                  </h3>
-                  <p className="text-sm text-muted-foreground line-clamp-2">
-                    {o.description}
-                  </p>
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between gap-4">
+                    <h3 className="font-semibold group-hover:underline">
+                      {o.name}
+                    </h3>
+
+                    <div className="flex shrink-0 items-center gap-2 text-xs text-muted-foreground">
+                      <Calendar className="h-3 w-3" />
+                      <span>{formatDate(o.date)}</span>
+                      <span>·</span>
+                      <span>{getDayOfWeek(o.date)}</span>
+                    </div>
+                  </div>
                 </CardContent>
               </Link>
             </Card>

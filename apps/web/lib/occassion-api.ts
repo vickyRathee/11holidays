@@ -148,7 +148,7 @@ export async function fetchOccasionByCountry(
   }
 }
 
-export async function fetchUpcomingHolidays(
+export async function fetchUpcomingOccasions(
   env: CloudflareEnv,
   countryCode: string,
   limit = 8
@@ -157,9 +157,13 @@ export async function fetchUpcomingHolidays(
 
   const today = format(new Date(), 'yyyy-MM-dd');
 
-  return holidays
+  const upcoming = holidays
     .filter((holiday) => holiday.date >= today)
     .sort((a, b) => a.date.localeCompare(b.date))
     .slice(0, limit);
+
+  return upcoming.length
+    ? upcoming
+    : holidays.sort((a, b) => a.date.localeCompare(b.date)).slice(0, limit);
 }
 
