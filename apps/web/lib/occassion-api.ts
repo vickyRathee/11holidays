@@ -69,6 +69,8 @@ export async function fetchOccasion(
 
 export async function fetchOccasions(
   env: CloudflareEnv,
+  offset: number = 0,
+  limit: number = 5000
 ) {
   try {
     const session = env.DB.withSession();
@@ -89,7 +91,8 @@ export async function fetchOccasions(
       h.year = CAST(strftime('%Y', 'now') AS INTEGER) 
       and o.description IS NOT NULL
     ORDER BY o.updated_at DESC
-  `);
+    LIMIT ? OFFSET ?
+  `).bind(limit, offset);
 
     const { results } = await sqlQuery.all<Occasion>();
     return results.map(x => ({
