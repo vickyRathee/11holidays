@@ -8,27 +8,22 @@ import { CountryFlag } from './country-flag';
 
 interface OccasionsListProps {
   occasions: Occasion[];
-  limit?: number;
   className?: string;
   emptyMessage?: string;
 }
 
 export function OccasionsList({
   occasions,
-  limit,
   className,
   emptyMessage = 'No holidays found.',
 }: OccasionsListProps) {
-  const items =
-    typeof limit === 'number' ? occasions.slice(0, limit) : occasions;
-
   return (
     <section className={cn('space-y-4', className)}>
-      {items.length === 0 ? (
+      {occasions.length === 0 ? (
         <p className="text-sm text-muted-foreground">{emptyMessage}</p>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2">
-          {items.map((o) => (
+          {occasions.map((o) => (
             <Card key={o.occasion_id} className="overflow-hidden group py-0">
               <Link href={`/holidays/${o.url}`} className="block">
                 <AspectRatio ratio={16 / 9} className="bg-muted">
