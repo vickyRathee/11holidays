@@ -23,6 +23,7 @@ import { Breadcrumb } from '@/components/breadcrumb';
 import { Button } from '@/components/ui/button';
 import { OccasionsList } from '@/components/occasions-list';
 import Script from 'next/script';
+import { AdsBlock } from '../../../../components/ads-block';
 
 interface OccasionPageContentProps {
   country: Country;
@@ -73,21 +74,7 @@ export function OccasionPageContent({
           )}
         </div>
 
-        <div>
-          <ins
-            className="adsbygoogle"
-            style={{ display: 'block' }}
-            data-ad-client="ca-pub-8402459453084519"
-            data-ad-slot="3130208712"
-            data-ad-format="auto"
-            data-full-width-responsive="true"
-          />
-          <Script strategy="afterInteractive" id="adsbygoogle-init">
-            {`
-            (adsbygoogle = window.adsbygoogle || []).push({});
-          `}
-          </Script>
-        </div>
+        <AdsBlock />
 
         {occasion.image && (
           <div className="overflow-hidden rounded-lg border">
@@ -141,21 +128,7 @@ export function OccasionPageContent({
         </p>
       </section>
 
-      <div>
-        <ins
-          className="adsbygoogle"
-          style={{ display: 'block' }}
-          data-ad-client="ca-pub-8402459453084519"
-          data-ad-slot="3130208712"
-          data-ad-format="auto"
-          data-full-width-responsive="true"
-        />
-        <Script strategy="afterInteractive" id="adsbygoogle-init">
-          {`
-            (adsbygoogle = window.adsbygoogle || []).push({});
-          `}
-        </Script>
-      </div>
+      <AdsBlock />
 
       <section className="space-y-4">
         <div>
@@ -239,8 +212,6 @@ export function OccasionPageContent({
         </div>
       </section>
 
-      <Separator />
-
       <section className="w-full mt-8 space-y-4 text-left">
         <div className="flex items-center justify-between">
           <h2 className="text-3xl font-bold">
@@ -256,21 +227,7 @@ export function OccasionPageContent({
 
         <OccasionsList occasions={upcomingHolidays} />
 
-        <div>
-          <ins
-            className="adsbygoogle"
-            style={{ display: 'block' }}
-            data-ad-client="ca-pub-8402459453084519"
-            data-ad-slot="3130208712"
-            data-ad-format="auto"
-            data-full-width-responsive="true"
-          />
-          <Script strategy="afterInteractive" id="adsbygoogle-init">
-            {`
-            (adsbygoogle = window.adsbygoogle || []).push({});
-          `}
-          </Script>
-        </div>
+        <AdsBlock />
       </section>
     </PageLayout>
   );

@@ -3,6 +3,14 @@ import { ThemeToggle } from './theme-toggle';
 import { Github, Globe } from 'lucide-react';
 import { Button } from './ui/button';
 
+const navItems = [
+  { href: '/', label: 'Home' },
+  { href: '/countries', label: 'Countries' },
+  { href: '/pricing', label: 'Pricing' },
+  { href: '/about', label: 'About' },
+  { href: '/contact', label: 'Contact' },
+];
+
 export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -15,41 +23,29 @@ export function Header() {
             </span>
             <span className="sm:hidden font-bold text-sm">11holidays.com</span>
           </Link>
+
           <nav className="hidden lg:flex gap-4 lg:gap-6">
-            <Link
-              href="/"
-              className="flex items-center text-xs sm:text-sm font-medium transition-colors hover:text-primary whitespace-nowrap"
-            >
-              Home
-            </Link>
-            <Link
-              href="/countries"
-              className="flex items-center text-xs sm:text-sm font-medium text-muted-foreground transition-colors hover:text-primary whitespace-nowrap"
-            >
-              Countries
-            </Link>
-            <Link
-              href="/pricing"
-              className="flex items-center text-xs sm:text-sm font-medium text-muted-foreground transition-colors hover:text-primary whitespace-nowrap"
-            >
-              Pricing
-            </Link>
-            <Link
-              href="/about"
-              className="flex items-center text-xs sm:text-sm font-medium text-muted-foreground transition-colors hover:text-primary whitespace-nowrap"
-            >
-              About
-            </Link>
-            <Link
-              href="/contact"
-              className="flex items-center text-xs sm:text-sm font-medium text-muted-foreground transition-colors hover:text-primary whitespace-nowrap"
-            >
-              Contact
-            </Link>
+            {navItems.map(({ href, label }, index) => (
+              <Link
+                key={href}
+                href={href}
+                prefetch={false}
+                className={`flex items-center text-xs sm:text-sm font-medium transition-colors hover:text-primary whitespace-nowrap ${
+                  index === 0 ? '' : 'text-muted-foreground'
+                }`}
+              >
+                {label}
+              </Link>
+            ))}
           </nav>
         </div>
         <div className="flex gap-2 sm:gap-3 items-center flex-shrink-0">
-          <Button variant="ghost" size="icon" asChild className="h-9 w-9 sm:h-10 sm:w-10">
+          <Button
+            variant="ghost"
+            size="icon"
+            asChild
+            className="h-9 w-9 sm:h-10 sm:w-10"
+          >
             <a
               href="https://github.com/dayschedule/11holidays"
               target="_blank"
