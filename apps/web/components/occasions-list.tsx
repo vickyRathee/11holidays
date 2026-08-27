@@ -27,7 +27,11 @@ export function OccasionsList({
         <div className="grid gap-4 sm:grid-cols-2">
           {occasions.map((o) => (
             <Card key={o.occasion_id} className="overflow-hidden group py-0">
-              <Link href={`/holidays/${o.url}`} className="block">
+              <Link
+                href={`/holidays/${o.url}`}
+                className="block"
+                prefetch={false}
+              >
                 <AspectRatio ratio={16 / 9} className="bg-muted">
                   {o.image?.url ? (
                     <Image

@@ -8,6 +8,13 @@ import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
+const footerLinks = [
+  { href: '/about', label: 'About' },
+  { href: '/pricing', label: 'Pricing' },
+  { href: '/terms', label: 'Terms' },
+  { href: '/contact', label: 'Contact' },
+];
+
 export default function RootLayout({
   children,
 }: {
@@ -39,30 +46,16 @@ export default function RootLayout({
                   for the love of holidays 🎉
                 </p>
                 <div className="flex flex-wrap justify-center gap-3 text-xs sm:text-sm text-muted-foreground md:justify-end">
-                  <Link
-                    href="/about"
-                    className="hover:text-primary transition-colors"
-                  >
-                    About
-                  </Link>
-                  <Link
-                    href="/pricing"
-                    className="hover:text-primary transition-colors"
-                  >
-                    Pricing
-                  </Link>
-                  <Link
-                    href="/terms"
-                    className="hover:text-primary transition-colors"
-                  >
-                    Terms
-                  </Link>
-                  <Link
-                    href="/contact"
-                    className="hover:text-primary transition-colors"
-                  >
-                    Contact
-                  </Link>
+                  {footerLinks.map(({ href, label }) => (
+                    <Link
+                      key={href}
+                      href={href}
+                      prefetch={false}
+                      className="hover:text-primary transition-colors"
+                    >
+                      {label}
+                    </Link>
+                  ))}
                 </div>
               </div>
             </footer>
