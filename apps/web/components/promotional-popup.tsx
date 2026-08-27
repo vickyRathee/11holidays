@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Github, X, Star, Calendar, CalendarCheck } from 'lucide-react';
+import { X, Calendar, CalendarCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const STORAGE_KEY = 'ds-dismissed-at';
@@ -53,21 +53,19 @@ export function PromotionalPopup() {
           <CalendarCheck className="h-5 w-5" />
         </div>
         <div className="flex-1">
-          <h3 className="text-lg font-semibold">
-            Need an appointment booking system?
+          <h3 className="text-sm font-semibold">
+            Get 20% off DaySchedule — for life
           </h3>
           <p className="mt-1 text-sm text-muted-foreground">
-            Create a professional booking page in minutes. No coding required.
+            Create a professional booking page in minutes and get 20% off your
+            DaySchedule subscription for life.
           </p>
-          <div className="mt-3 flex gap-2">
+          <div className="mt-3 flex-col gap-4">
             <Button size="sm" asChild onClick={dismiss}>
               <a href={DS_URL} target="_blank" rel="noopener noreferrer">
                 <Calendar className="h-4 w-4" />
-                Create Booking Page
+                Get 20% Lifetime Discount
               </a>
-            </Button>
-            <Button size="sm" variant="ghost" onClick={dismiss}>
-              Maybe later
             </Button>
           </div>
         </div>
