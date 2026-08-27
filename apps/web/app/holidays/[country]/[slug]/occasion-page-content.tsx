@@ -3,7 +3,6 @@ import { PageLayout } from '@/components/page-layout';
 import { useMemo } from 'react';
 import { format, parseISO } from 'date-fns';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
-import { Separator } from '@/components/ui/separator';
 import { ArrowRight } from 'lucide-react';
 import {
   Table,
@@ -22,8 +21,7 @@ import Image from 'next/image';
 import { Breadcrumb } from '@/components/breadcrumb';
 import { Button } from '@/components/ui/button';
 import { OccasionsList } from '@/components/occasions-list';
-import Script from 'next/script';
-import { AdsBlock } from '../../../../components/ads-block';
+import { AdsBlock } from '@/components/ads-block';
 
 interface OccasionPageContentProps {
   country: Country;
@@ -74,50 +72,54 @@ export function OccasionPageContent({
           )}
         </div>
 
-        <AdsBlock />
-
         {occasion.image && (
-          <div className="overflow-hidden rounded-lg border">
-            <AspectRatio ratio={16 / 9}>
-              <Image
-                src={occasion.image.url}
-                alt={
-                  occasion.image.alt || occasion.image.query || occasion.name
-                }
-                fill
-                className="object-cover"
-                loading="lazy"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-            </AspectRatio>
-            <div className="px-3 py-2 text-xs text-muted-foreground flex items-center justify-between">
-              <span>
-                Photo by{' '}
-                <a
-                  href={occasion.image.photographer_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline hover:text-foreground"
-                >
-                  {occasion.image.photographer}
-                </a>{' '}
-                on{' '}
-                <a
-                  href={occasion.image.unsplash_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline hover:text-foreground"
-                >
-                  Unsplash
-                </a>
-              </span>
-              {occasion.updated_at && (
+          <>
+            <AdsBlock />
+
+            <div className="overflow-hidden rounded-lg border">
+              <AspectRatio ratio={16 / 9}>
+                <Image
+                  src={occasion.image.url}
+                  alt={
+                    occasion.image.alt || occasion.image.query || occasion.name
+                  }
+                  fill
+                  className="object-cover"
+                  loading="lazy"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  unoptimized
+                />
+              </AspectRatio>
+              <div className="px-3 py-2 text-xs text-muted-foreground flex items-center justify-between">
                 <span>
-                  Updated {format(parseISO(occasion.updated_at), 'd MMM yyyy')}
+                  Photo by{' '}
+                  <a
+                    href={occasion.image.photographer_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:text-foreground"
+                  >
+                    {occasion.image.photographer}
+                  </a>{' '}
+                  on{' '}
+                  <a
+                    href={occasion.image.unsplash_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:text-foreground"
+                  >
+                    Unsplash
+                  </a>
                 </span>
-              )}
+                {occasion.updated_at && (
+                  <span>
+                    Updated{' '}
+                    {format(parseISO(occasion.updated_at), 'd MMM yyyy')}
+                  </span>
+                )}
+              </div>
             </div>
-          </div>
+          </>
         )}
       </section>
 
