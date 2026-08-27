@@ -73,6 +73,22 @@ export function OccasionPageContent({
           )}
         </div>
 
+        <div>
+          <ins
+            className="adsbygoogle"
+            style={{ display: 'block' }}
+            data-ad-client="ca-pub-8402459453084519"
+            data-ad-slot="3130208712"
+            data-ad-format="auto"
+            data-full-width-responsive="true"
+          />
+          <Script strategy="afterInteractive" id="adsbygoogle-init">
+            {`
+            (adsbygoogle = window.adsbygoogle || []).push({});
+          `}
+          </Script>
+        </div>
+
         {occasion.image && (
           <div className="overflow-hidden rounded-lg border">
             <AspectRatio ratio={16 / 9}>
@@ -239,6 +255,22 @@ export function OccasionPageContent({
         </div>
 
         <OccasionsList occasions={upcomingHolidays} />
+
+        <div>
+          <ins
+            className="adsbygoogle"
+            style={{ display: 'block' }}
+            data-ad-client="ca-pub-8402459453084519"
+            data-ad-slot="3130208712"
+            data-ad-format="auto"
+            data-full-width-responsive="true"
+          />
+          <Script strategy="afterInteractive" id="adsbygoogle-init">
+            {`
+            (adsbygoogle = window.adsbygoogle || []).push({});
+          `}
+          </Script>
+        </div>
       </section>
     </PageLayout>
   );
