@@ -40,6 +40,7 @@ export function OccasionsList({
                       fill
                       loading="lazy"
                       className="object-cover transition-transform group-hover:scale-105"
+                      unoptimized
                     />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center p-6">
