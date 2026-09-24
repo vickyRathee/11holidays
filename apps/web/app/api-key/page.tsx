@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import ApiKeySignup from '@/components/signup';
 import { Suspense } from 'react';
-import { PageLayout } from '../../components/page-layout';
+import { PageLayout } from '@/components/page-layout';
 
 export const metadata = {
   title: 'Get API Key for Holidays API - 11holidays.com',

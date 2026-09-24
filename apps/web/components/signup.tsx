@@ -14,6 +14,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Key, Mail, Check, Copy, Loader2, Sparkles } from 'lucide-react';
+import { useRecaptcha } from '../hooks/use-recaptcha';
 
 type Step = 'email' | 'otp' | 'upgrade' | 'generate';
 type Plan = 'Free' | 'Pro' | 'Lifetime';
@@ -42,6 +43,8 @@ export default function ApiKeySignup() {
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
 
+  const { executeRecaptcha } = useRecaptcha();
+
   // Update step when query parameter changes (e.g., after Stripe redirect)
   useEffect(() => {
     if (stepParam) {
@@ -63,10 +66,11 @@ export default function ApiKeySignup() {
     setError('');
 
     try {
+      const recaptchaToken = await executeRecaptcha('signup');
       const response = await fetch(`${API_URL}/auth`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, recaptcha: recaptchaToken }),
       });
 
       if (!response.ok) {
