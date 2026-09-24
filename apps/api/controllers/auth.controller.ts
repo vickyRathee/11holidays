@@ -5,6 +5,7 @@ import { validator } from 'hono/validator';
 import { activateUserAfterOtp, generateApiKey, getUserByEmail, signupWithEmail } from '../services/auth.service';
 import { z } from '@hono/zod-openapi';
 import { createStripeSession } from '../services/stripe.service';
+import { captchaVerify } from '../services/recaptcha.service';
 
 const auth = new Hono<{ Bindings: CloudflareBindings }>();
 
@@ -12,6 +13,7 @@ auth.post('/',
     validator("json", (value, ctx) => {
         const parsed = z.object({
             email: z.email(),
+            recaptcha: z.string().min(32)
         }).safeParse(value);
 
         if (parsed.success === false) {
@@ -21,6 +23,10 @@ auth.post('/',
     }),
     async (ctx) => {
         const user = ctx.req.valid("json");
+
+        // Capthca verify
+        await captchaVerify(ctx.env, user.recaptcha);
+
         // 1. Ensure user exists
         await signupWithEmail(ctx.env, user.email);
 

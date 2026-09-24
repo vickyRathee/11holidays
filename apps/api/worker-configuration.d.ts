@@ -10,6 +10,7 @@ declare namespace Cloudflare {
 		DB: D1Database;
 		EMAIL: SendEmail;
 		STRIPE_SECRET_KEY: string;
+        RECAPTCHA_KEY: string
 	}
 }
 interface CloudflareBindings extends Cloudflare.Env {}
